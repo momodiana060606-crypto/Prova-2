@@ -6,7 +6,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "demo": "MODALITA_DEMO=1 node src/server.js",
+    "demo": "node src/server.js --demo",
     "test": "node --test"
   },
   "engines": {

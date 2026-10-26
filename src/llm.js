@@ -6,7 +6,7 @@ const MODELLO = process.env.MODELLO || "claude-opus-5-5";
 const EFFORT = process.env.EFFORT || "medium";
 
 export const MODALITA_DEMO =
-  process.env.MODALITA_DEMO === "1" || !(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+  process.env.MODALITA_DEMO === "1" || process.argv.includes("--demo") || !(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
 
 const client = MODALITA_DEMO ? null : new Anthropic();
 

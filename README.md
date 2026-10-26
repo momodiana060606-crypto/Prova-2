@@ -42,11 +42,21 @@ Le chat vengono salvate nella cartella `data/` e restano disponibili dopo un ria
 Serve [Node.js](https://nodejs.org) 20 o superiore e una chiave API di Anthropic
 (la crei su <https://console.anthropic.com>).
 
+Apri un terminale nella cartella del progetto e lancia:
+
 ```bash
 npm install
-export ANTHROPIC_API_KEY="la-tua-chiave"
-npm start
 ```
+
+Poi imposta la chiave e avvia (il comando cambia in base al sistema):
+
+| Sistema | Comandi |
+|---|---|
+| Mac / Linux (Terminale) | `export ANTHROPIC_API_KEY="la-tua-chiave"` poi `npm start` |
+| Windows (PowerShell) | `$env:ANTHROPIC_API_KEY="la-tua-chiave"` poi `npm start` |
+| Windows (Prompt dei comandi) | `set ANTHROPIC_API_KEY=la-tua-chiave` poi `npm start` |
+
+La chiave va reimpostata ogni volta che apri un nuovo terminale.
 
 Poi apri <http://localhost:3000> e premi **＋** per avviare una sessione.
 
