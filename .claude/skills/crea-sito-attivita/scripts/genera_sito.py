@@ -195,7 +195,16 @@ def e(testo):
     return html.escape(str(testo), quote=True)
 
 
-def genera(lead, out):
+def su_misura(percorso):
+    """True se il file è un sito fatto a mano (skill sito-su-misura)."""
+    try:
+        with open(percorso, encoding="utf-8") as f:
+            return "<!-- su-misura -->" in f.read(500)
+    except FileNotFoundError:
+        return False
+
+
+def genera(lead, out, forza=False):
     p = PRESET.get(lead.get("settore"), PRESET["generico"])
     nome, citta = lead["nome"], lead.get("citta") or ""
     parti = [lead.get("indirizzo"), " ".join(filter(None, [lead.get("cap"), citta])),
@@ -237,6 +246,8 @@ def genera(lead, out):
         orari=e(lead.get("orari") or "Su richiesta: contattaci per informazioni."),
     )
     cartella = os.path.join(out, lead["slug"])
+    if su_misura(os.path.join(cartella, "index.html")) and not forza:
+        return cartella + " (sito su misura, non sovrascritto)"
     os.makedirs(cartella, exist_ok=True)
     with open(os.path.join(cartella, "index.html"), "w", encoding="utf-8") as f:
         f.write(pagina)
@@ -260,13 +271,14 @@ def main():
     ap.add_argument("leads")
     ap.add_argument("--out", default="siti")
     ap.add_argument("--slug", help="genera solo questo lead")
+    ap.add_argument("--forza", action="store_true", help="sovrascrive anche i siti su misura")
     a = ap.parse_args()
     with open(a.leads, encoding="utf-8") as f:
         dati = json.load(f)
     leads = [l for l in dati["leads"] if l.get("stato_verifica") != "scartato"]
     for l in leads:
         if not a.slug or l["slug"] == a.slug:
-            print("creato", genera(l, a.out))
+            print("creato", genera(l, a.out, a.forza))
     indice(leads, dati.get("zona", ""), a.out)
 
 
