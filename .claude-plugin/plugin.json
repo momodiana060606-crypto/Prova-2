@@ -1,0 +1,19 @@
+{
+  "name": "claude-code-settings",
+  "displayName": "Claude Code Settings",
+  "version": "2.4.3",
+  "description": "Claude Code settings, agents and skills for enhanced development workflows",
+  "author": {
+    "name": "Pengfei Ni",
+    "url": "https://github.com/feiskyer/claude-code-settings"
+  },
+  "homepage": "https://github.com/feiskyer/claude-code-settings",
+  "repository": "https://github.com/feiskyer/claude-code-settings",
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "litellm",
+    "claude-code",
+    "skills"
+  ]
+}

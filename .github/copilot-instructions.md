@@ -1,0 +1,84 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code and GitHub Copilot when working with code in this repository.
+
+## Environment Setup
+
+This repository contains Claude Code settings, configurations and guidance. The default setup uses GitHub Copilot as the model provider through a proxy API.
+
+### Required Dependencies
+
+- `copilot-gateway`: Run with `npx copilot-gateway@latest start --proxy-env` to start the proxy and authorize GitHub Copilot account
+- Use tmux for session management: `tmux new-session -d -s copilot 'npx copilot-gateway@latest start --proxy-env'`
+
+### Configuration
+
+- `settings.json`: Contains environment variables for API configuration
+- Uses `localhost:4141` as the API base URL
+- Telemetry and non-essential traffic are disabled
+
+## Skills
+
+Skills are reusable capabilities defined in the `skills/` directory. Each skill has a `SKILL.md` file with YAML frontmatter containing `name` and `description` fields. The description serves as both documentation and trigger condition.
+
+### Skill File Structure
+
+All skill files must include YAML frontmatter:
+
+```yaml
+---
+name: skill-name
+description: 'Comprehensive description that also serves as the trigger condition. Include keywords and phrases that should activate this skill.'
+---
+```
+
+### Directory Structure
+
+```sh
+skills/
+├── translate/           # Tech article translation to Chinese
+├── github-fix-issue/    # Fix GitHub issues end-to-end
+├── github-review-pr/    # Review GitHub pull requests
+├── skill-creator/       # Create and benchmark agent skills
+├── codex-skill/         # Handoff tasks to Codex CLI
+├── nanobanana-skill/    # Image generation with Gemini
+├── gpt-image-skill/     # Image generation with OpenAI GPT Image
+├── brainstorming/       # Requirements/design dialogue before building
+├── grill-me/            # Adversarial design interview (manual /grill-me)
+├── handoff/             # Session handoff document (manual /handoff)
+├── deep-research/       # Multi-agent research orchestration
+└── youtube-transcribe-skill/  # YouTube transcript extraction
+```
+
+### Usage
+
+Skills are invoked via slash syntax or triggered automatically:
+
+```sh
+/skill-name [arguments]
+```
+
+**Examples:**
+
+- `/translate [text or file]` - Translate to Chinese
+
+### Skill Development Principles
+
+When creating or modifying skills:
+
+- **Comprehensive descriptions**: The `description` field triggers the skill, so include relevant keywords and phrases
+- **Structure content clearly**: Use clear sections; state the goal, constraints, and how to verify, and reserve numbered steps for sequences where order truly matters (e.g. fragile CLI/browser flows)
+- **Arguments**: Skills can read slash-command input via `$ARGUMENTS`; declare an `argument-hint` in frontmatter when the skill expects one
+- **Define specific outputs**: Include explicit output formats and structures
+- **Keep skills focused**: One skill, one purpose
+
+### Behavioral Guidelines
+
+- **Concise communication**: Provide direct answers without unnecessary preamble or elaboration
+- **Follow existing patterns**: Always check similar skills for consistent structure and approach
+- **Prefer editing over creating**: Always edit existing files rather than creating new ones unless absolutely necessary
+- **Use TodoWrite for complex tasks**: Track multistep processes and ensure completion of all requirements
+
+## Guidances
+
+Claude Code guidances should be put under `guidances/` directory and linked at README.md.

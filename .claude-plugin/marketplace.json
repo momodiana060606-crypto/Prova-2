@@ -1,0 +1,28 @@
+{
+  "name": "claude-code-settings",
+  "owner": {
+    "name": "Pengfei Ni"
+  },
+  "metadata": {
+    "description": "Claude Code settings and skills for enhanced development workflows"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-settings",
+      "source": "./",
+      "description": "Claude Code settings, agents and skills (all in one). Do not install sub-plugins below together with this one — they are already included."
+    },
+    {
+      "name": "codex-skill",
+      "source": "./plugins/codex-skill"
+    },
+    {
+      "name": "nanobanana-skill",
+      "source": "./plugins/nanobanana-skill"
+    },
+    {
+      "name": "youtube-transcribe-skill",
+      "source": "./plugins/youtube-transcribe-skill"
+    }
+  ]
+}
