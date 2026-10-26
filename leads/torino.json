@@ -1,0 +1,191 @@
+{
+  "zona": "Torino e dintorni",
+  "data_ricerca": "2026-10-26",
+  "metodo": "WebSearch su directory (PagineGialle, PagineBianche, Virgilio, Reteimprese, Empresite, Fresha, LocalShop24) per calzolai, sartorie, barbieri e panifici a Torino, Moncalieri e Collegno. Verifiche 1-4 della skill eseguite per ogni candidato tenuto. Verifica 5 (DNS/registro .it) non eseguibile da questo ambiente: lanciare verifica_sito.py da una rete libera.",
+  "leads": [
+    {
+      "slug": "talluto-barberia",
+      "nome": "Talluto Barberia",
+      "settore": "barbiere",
+      "indirizzo": "Via Madama Cristina 114",
+      "cap": "10126",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 389 936 3908",
+      "email": null,
+      "orari": null,
+      "descrizione": "Barberia in Via Madama Cristina, nel quartiere di San Salvario, a Torino.",
+      "servizi": ["Taglio uomo", "Regolazione barba", "Rasatura con panno caldo", "Rasatura testa"],
+      "presenza_online": ["Fresha"],
+      "stato_verifica": "nessun_sito_trovato",
+      "livello_certezza": "alta",
+      "verifiche": [
+        "1 nome+città: solo schede Fresha",
+        "2 nome+sito web: nessun dominio proprio (risultati di altre barberie)",
+        "3 telefono: compare solo su Fresha",
+        "4 social: nessun profilo Instagram/Facebook dell'attività trovato",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": ["https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y"],
+      "note": "Servizi presi da Fresha. Orari su Fresha solo indicativi (non riportati)."
+    },
+    {
+      "slug": "sartoria-in-punto",
+      "nome": "Sartoria in Punto",
+      "settore": "sartoria",
+      "indirizzo": "Via del Carmine 26",
+      "cap": "10122",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 329 001 9522",
+      "email": null,
+      "orari": null,
+      "descrizione": "Sartoria nel centro di Torino, in Via del Carmine (Quadrilatero Romano), specializzata in riparazioni e modifiche di abbigliamento da donna e da uomo.",
+      "servizi": ["Riparazioni sartoriali donna", "Riparazioni sartoriali uomo", "Modifiche e orli"],
+      "presenza_online": ["Facebook", "PagineBianche", "Virgilio", "Reteimprese"],
+      "stato_verifica": "nessun_sito_trovato",
+      "livello_certezza": "alta",
+      "verifiche": [
+        "1 nome+città: solo directory (Virgilio, PagineBianche, Reteimprese) concordi su indirizzo e telefono",
+        "2 nome+sito web: nessun dominio; l'unico www sulla scheda PagineBianche è 1240.it (servizio della directory)",
+        "3 telefono: 329 0019522 e 011 4360368 solo su directory",
+        "4 social: pagina Facebook 'Sartoria in PUNTO', nessun link a sito",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": [
+        "https://aziende.virgilio.it/sartoria/torino-to/sartoria-punto",
+        "https://www.paginebianche.it/torino/sartoria-punto.8165026",
+        "https://www.reteimprese.it/info_A93626B10000",
+        "https://www.facebook.com/people/Sartoria-in-PUNTO/100046779985810/"
+      ],
+      "note": "Titolare indicato dalle directory: Saviciene Anzelika. Telefono fisso alternativo: 011 4360368."
+    },
+    {
+      "slug": "riparazioni-sartoriali-sandu-florentina",
+      "nome": "Riparazioni Sartoriali di Sandu Florentina",
+      "settore": "sartoria",
+      "indirizzo": "Via Amerigo Vespucci 1/D",
+      "cap": "10128",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 392 944 9786",
+      "email": null,
+      "orari": null,
+      "descrizione": "Laboratorio di riparazioni sartoriali e lavori su misura nel quartiere Crocetta, a Torino.",
+      "servizi": ["Riparazioni sartoriali", "Lavori su misura", "Orli e modifiche"],
+      "presenza_online": ["Reteimprese", "Empresite"],
+      "stato_verifica": "nessun_sito_trovato",
+      "livello_certezza": "alta",
+      "verifiche": [
+        "1 nome+città: Reteimprese ed Empresite concordi (impresa individuale, P.IVA 11587530012)",
+        "2 nome+sito web: solo la mini-pagina della directory Reteimprese, nessun dominio proprio",
+        "3 telefono: compare solo sulle directory",
+        "4 social: nessuno trovato",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": [
+        "https://www.reteimprese.it/info_A202175B100",
+        "https://www.empresite.it/Attivita/RIPARAZIONI/provincia/TORINO/"
+      ],
+      "note": "'Orli e modifiche' dedotto dalla categoria riparazioni sartoriali: confermare."
+    },
+    {
+      "slug": "il-calzolaio-vanchiglia",
+      "nome": "Il Calzolaio di Via Vanchiglia",
+      "settore": "calzolaio",
+      "indirizzo": "Via Vanchiglia 20",
+      "cap": "10124",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 333 115 9468",
+      "email": null,
+      "orari": "Lunedì–venerdì 9:00–13:00 e 14:30–18:30 · sabato e domenica chiuso",
+      "descrizione": "Laboratorio di Carmine Gallerano in Via Vanchiglia: riparazione di calzature, borse e pelletteria, anche di grandi marche.",
+      "servizi": ["Riparazione calzature", "Sostituzione tacchi e suole", "Ricostruzione tacchi", "Riparazione borse e pelletteria (manici, cerniere)", "Cinture e plantari su misura"],
+      "presenza_online": ["Tumblr", "Facebook (profilo personale)", "PagineGialle", "Virgilio", "Infobel"],
+      "stato_verifica": "nessun_sito_trovato",
+      "livello_certezza": "media",
+      "verifiche": [
+        "1 nome+città: directory concordi su indirizzo, telefono e orari",
+        "2 nome+sito web: nessun dominio; solo Tumblr (carminegalleranocalzolaio)",
+        "3 telefono: 333 1159468 solo su directory e Tumblr",
+        "4 social: Tumblr dell'attività e profilo Facebook personale; nessun link a sito",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": [
+        "https://aziende.virgilio.it/forniture-calzature/torino-to/calzolaio-torino",
+        "https://www.tumblr.com/carminegalleranocalzolaio",
+        "https://www.infobel.com/it/italy/calzolaio/torino/IT110207738/businessdetails.aspx",
+        "https://www.paginegialle.it/piemonte/torino/calzolai/quartiere-vanchiglia.html"
+      ],
+      "note": "Certezza media: la scheda Infobel ha un campo 'Sito Internet' di cui non ho visto il valore (probabilmente il Tumblr). Il nome commerciale è solo 'Il Calzolaio' / 'Calzolaio': il titolo del sito usa la via per distinguerlo. Civico riportato anche come 20/d."
+    },
+    {
+      "slug": "riparazione-sartoria-anna",
+      "nome": "Riparazione Sartoria Anna",
+      "settore": "sartoria",
+      "indirizzo": "Via Tripoli 113",
+      "cap": "10137",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 377 883 0833",
+      "email": null,
+      "orari": null,
+      "descrizione": "Sartoria di riparazioni in Via Tripoli, nel quartiere Santa Rita, a Torino.",
+      "servizi": [],
+      "presenza_online": ["Reteimprese"],
+      "stato_verifica": "nessun_sito_trovato",
+      "livello_certezza": "media",
+      "verifiche": [
+        "1 nome+città: una sola directory (Reteimprese, due schede concordi)",
+        "2 nome+sito web: nessun dominio",
+        "3 telefono: compare solo su Reteimprese",
+        "4 social: nessuno trovato",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": ["https://www.reteimprese.it/sartorie/torino/azienda/3270406"],
+      "note": "Certezza media: unica fonte, verificare che l'attività sia ancora aperta."
+    },
+    {
+      "slug": "cuci-express-venditti-marilena",
+      "nome": "Cuci Express di Venditti Marilena",
+      "settore": "sartoria",
+      "indirizzo": "Via Pastrengo 7",
+      "cap": "10128",
+      "citta": "Torino",
+      "provincia": "TO",
+      "telefono": "+39 349 787 4988",
+      "email": null,
+      "orari": null,
+      "descrizione": "Sartoria di riparazioni per uomo e donna a Torino, specializzata in modifiche e rammendi.",
+      "servizi": ["Riparazioni sartoriali uomo e donna", "Rammendi", "Orli e modifiche"],
+      "presenza_online": ["PagineGialle", "PagineBianche", "Reteimprese", "MisterImprese"],
+      "stato_verifica": "dubbio",
+      "livello_certezza": "media",
+      "verifiche": [
+        "1 nome+città: molte directory, ma con indirizzi diversi (Via Pastrengo 7, Via Monti 11/bis, Via Valeggio 16)",
+        "2 nome+sito web: nessun dominio proprio",
+        "3 telefono: 349 7874988 / 011 658709 solo su directory",
+        "4 social: nessuno trovato",
+        "5 domini: non eseguito (rete bloccata)"
+      ],
+      "fonti": [
+        "https://www.paginebianche.it/scheda/torino/cuci-express-venditti-marilena.7036876",
+        "https://www.reteimprese.it/sartorie/torino/azienda/933636",
+        "https://aziende.virgilio.it/torino-to/cuci-express-venditti-marilena_3"
+      ],
+      "note": "Dubbio: indirizzi discordanti, forse più sedi nel tempo. Via Pastrengo 7 è quella su cui concordano PagineGialle e PagineBianche. Confermare per telefono."
+    }
+  ],
+  "scartati": [
+    {"nome": "Doctor Shoes Il Calzolaio (Via Cibrario 19/E)", "motivo": "Ha un sito: calzolaioatorino.it (emerso solo al controllo 2)."},
+    {"nome": "Il Mago delle Scarpe Alex (Via Eusebio Bava 27/C)", "motivo": "Ha un sito: ilmagodellescarpe.net (emerso solo al controllo 2)."},
+    {"nome": "Il Calzolaio (Corso Racconigi 164/A)", "motivo": "La scheda LocalShop24 indica il sito doctorswing.net."},
+    {"nome": "Panificio Vivona (Moncalieri)", "motivo": "Ha già un mini-sito su eatbu (panificiovivona.eatbu.com)."},
+    {"nome": "Tony Multiservice (Corso Cadore 23/A)", "motivo": "Ha un sito: tonymultiservice.it."},
+    {"nome": "Calzolaio Antonio Marrazzo", "motivo": "Ha un sito: calzolaiomarrazzo.it."},
+    {"nome": "I Sapori del Grano (Collegno)", "motivo": "Dati contraddittori: lo stesso indirizzo e telefono risultano di un'altra ditta."},
+    {"nome": "La Forneria di Francesco (Moncalieri)", "motivo": "Non trovata in nessuna fonte oltre a un elenco telefonico."},
+    {"nome": "Sartoria Riparazioni (Corso Belgio 36)", "motivo": "Nome generico e telefoni discordanti: impossibile identificarla."}
+  ]
+}

@@ -12,6 +12,7 @@ Principi:
 - Qualità prima della quantità: meglio 5 lead verificati che 20 dubbi.
 - Ogni dato (telefono, indirizzo, orari) deve venire da una fonte che citi in `fonti`. Nessun dato inventato.
 - Scarta catene, franchising, aziende grandi e chi ha un dominio proprio.
+- Per ogni candidato esegui TUTTI i controlli della tabella "Verifica" della skill (nome, nome + "sito web", telefono, social, domini) e registrali nel campo `verifiche`: una sola ricerca per nome non basta.
 - Se un file `leads/<zona>.json` esiste già, aggiungi i nuovi lead senza duplicare (confronta `slug` e indirizzo).
 
-Risposta finale (breve): percorso del file, numero di lead salvati, elenco nome · settore · indirizzo · stato_verifica, e candidati scartati con il motivo.
+Risposta finale (breve): percorso del file, numero di lead salvati, elenco nome · settore · indirizzo · stato_verifica · livello_certezza, e candidati scartati con il motivo.

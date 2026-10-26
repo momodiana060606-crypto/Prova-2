@@ -11,14 +11,14 @@ Input: un file `leads/<zona>.json` prodotto dalla skill `trova-attivita-senza-si
 1. **Controlla i lead**: apri il JSON; salta i lead con `stato_verifica: "scartato"`. Se un lead è `"dubbio"`, generalo ma segnalalo all'utente.
 2. **Genera i siti** con lo script (nessuna dipendenza):
    ```bash
-   python3 .claude/skills/crea-sito-attivita/scripts/genera_sito.py leads/<zona>.json --out siti
+   python3 .claude/skills/crea-sito-attivita/scripts/genera_sito.py leads/<zona>.json --out siti/<zona>
    # solo uno:  ... --slug <slug>
    ```
-   Output: `siti/<slug>/index.html` per ogni lead + `siti/index.html` con l'elenco.
-3. **Personalizza** (facoltativo, se hai più informazioni): modifica direttamente `siti/<slug>/index.html` oppure aggiungi `descrizione`, `servizi`, `orari` nel JSON e rigenera. Preferisci il JSON: resta la fonte dei dati.
+   Output: `siti/<zona>/<slug>/index.html` per ogni lead + `siti/<zona>/index.html` con l'elenco.
+3. **Personalizza** (facoltativo, se hai più informazioni): modifica direttamente `siti/<zona>/<slug>/index.html` oppure aggiungi `descrizione`, `servizi`, `orari` nel JSON e rigenera. Preferisci il JSON: resta la fonte dei dati.
 4. **Verifica visiva**: fai uno screenshot desktop (1280px) e mobile (390px) con Playwright, controlla che non ci sia scroll orizzontale e che testo/pulsanti siano leggibili:
    ```bash
-   node -e "const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();for(const [w,n] of [[1280,'desk'],[390,'mob']]){const p=await b.newPage({viewport:{width:w,height:900}});await p.goto('file://'+process.cwd()+'/siti/<slug>/index.html');await p.screenshot({path:'<scratchpad>/<slug>-'+n+'.png',fullPage:true});}await b.close();})()"
+   node -e "const {chromium}=require('playwright');(async()=>{const b=await chromium.launch();for(const [w,n] of [[1280,'desk'],[390,'mob']]){const p=await b.newPage({viewport:{width:w,height:900}});await p.goto('file://'+process.cwd()+'/siti/<zona>/<slug>/index.html');await p.screenshot({path:'<scratchpad>/<slug>-'+n+'.png',fullPage:true});}await b.close();})()"
    ```
 
 ## Struttura del sito generato
