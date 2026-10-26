@@ -1,0 +1,754 @@
+<title>Agenzia Idee</title>
+<style>
+/* Layout: app a una schermata stile WhatsApp — elenco chat a sinistra, chat di gruppo a destra; su telefono una alla volta. */
+:root {
+  --verde: #008069;
+  --verde-testo: #008069;
+  --sfondo-app: #d1d7db;
+  --pannello: #ffffff;
+  --barra: #f0f2f5;
+  --sfondo-chat: #efeae2;
+  --puntini: rgba(84, 101, 111, 0.09);
+  --bolla: #ffffff;
+  --bolla-mia: #d9fdd3;
+  --testo: #111b21;
+  --testo-2: #667781;
+  --bordo: #e9edef;
+  --sistema: #ffeecd;
+  --avviso: #fff4d6;
+  --pericolo: #c0392b;
+  --ombra: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  --font: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --verde-testo: #00a884; --sfondo-app: #0c1317; --pannello: #111b21; --barra: #202c33; --sfondo-chat: #0b141a;
+    --puntini: rgba(134, 150, 160, 0.07); --bolla: #202c33; --bolla-mia: #005c4b; --testo: #e9edef; --testo-2: #8696a0;
+    --bordo: #222d34; --sistema: #182229; --avviso: #2a2a1f; --pericolo: #f1707b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --verde-testo: #00a884; --sfondo-app: #0c1317; --pannello: #111b21; --barra: #202c33; --sfondo-chat: #0b141a;
+  --puntini: rgba(134, 150, 160, 0.07); --bolla: #202c33; --bolla-mia: #005c4b; --testo: #e9edef; --testo-2: #8696a0;
+  --bordo: #222d34; --sistema: #182229; --avviso: #2a2a1f; --pericolo: #f1707b; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--sfondo-app); color: var(--testo); font: 14.5px/1.4 var(--font); overflow: hidden; }
+button { font: inherit; cursor: pointer; color: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.app { display: flex; height: 100%; max-width: 1500px; margin: 0 auto; background: var(--pannello); }
+
+.barra { display: flex; align-items: center; gap: 12px; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--barra); min-height: 60px; flex: none; }
+.titolo-barra { font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.info-chat { flex: 1; min-width: 0; }
+.sotto { color: var(--testo-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
+.icona { background: none; border: 0; color: var(--testo-2); font-size: 19px; width: 38px; height: 38px; border-radius: 50%; flex: none; }
+.icona:hover { background: color-mix(in srgb, var(--testo-2) 15%, transparent); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; flex: none; background: var(--bordo); }
+
+.sidebar { width: 380px; flex: none; display: flex; flex-direction: column; border-right: 1px solid var(--bordo); min-height: 0; }
+.sidebar .barra .titolo-barra { flex: 1; }
+.elenco { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; }
+.elenco li { display: flex; gap: 12px; align-items: center; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--bordo); }
+.elenco li:hover, .elenco li.attiva { background: var(--barra); }
+.elenco .corpo { flex: 1; min-width: 0; }
+.elenco .riga1 { display: flex; justify-content: space-between; gap: 8px; }
+.elenco .nome { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.elenco .ora { color: var(--testo-2); font-size: 12px; flex: none; }
+.elenco .anteprima { color: var(--testo-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.etichetta { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bordo); color: var(--testo-2); margin-left: 6px; vertical-align: 1px; }
+.avviso { background: var(--avviso); padding: 10px 16px; font-size: 13px; line-height: 1.45; }
+
+.chat { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.messaggi {
+  flex: 1; overflow-y: auto; padding-block: 16px;
+  padding-left: max(16px, 5%); padding-right: max(16px, 5%);
+  background-color: var(--sfondo-chat);
+  background-image: radial-gradient(var(--puntini) 1.2px, transparent 1.2px);
+  background-size: 18px 18px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.msg { display: flex; gap: 8px; align-items: flex-start; max-width: min(78%, 720px); margin-top: 8px; }
+.msg.seguito { margin-top: 2px; }
+.msg.seguito .avatar { visibility: hidden; }
+.msg .avatar { width: 32px; height: 32px; font-size: 16px; }
+.bolla { background: var(--bolla); padding: 6px 9px 8px; border-radius: 8px; box-shadow: var(--ombra); min-width: 120px; overflow-wrap: anywhere; min-width: 0; }
+.msg:not(.seguito) .bolla { border-top-left-radius: 0; }
+.mittente { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.mittente .ruolo { font-weight: 400; color: var(--testo-2); margin-left: 6px; font-size: 12px; }
+.testo { white-space: pre-wrap; }
+.meta { float: right; margin: 6px 0 -4px 12px; font-size: 11px; color: var(--testo-2); font-variant-numeric: tabular-nums; }
+.msg.mio { align-self: flex-end; flex-direction: row-reverse; }
+.msg.mio .avatar { display: none; }
+.msg.mio .bolla { background: var(--bolla-mia); border-top-left-radius: 8px; }
+.msg.mio:not(.seguito) .bolla { border-top-right-radius: 0; }
+details.dettagli { margin-top: 6px; border-top: 1px solid var(--bordo); padding-top: 4px; }
+details.dettagli summary { color: var(--verde-testo); font-size: 13px; cursor: pointer; font-weight: 500; }
+details.dettagli .testo { margin-top: 6px; font-size: 13.5px; }
+.sistema { align-self: center; background: var(--sistema); padding: 5px 12px; border-radius: 8px; font-size: 12.5px; margin: 12px 0 4px; box-shadow: var(--ombra); text-align: center; max-width: 90%; }
+.sistema.errore { color: var(--pericolo); }
+.scrive { color: var(--verde-testo); font-style: italic; }
+
+.ripresa { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--avviso); font-size: 13px; }
+.ripresa span { flex: 1; min-width: 0; }
+.scrivi { display: flex; gap: 8px; padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--barra); flex: none; }
+.scrivi input { flex: 1; border: 0; border-radius: 8px; padding: 11px 14px; font: inherit; background: var(--pannello); color: var(--testo); min-width: 0; }
+.invia { border: 0; background: var(--verde); color: #fff !important; width: 44px; height: 44px; border-radius: 50%; font-size: 17px; flex: none; }
+.invia:disabled { opacity: 0.5; cursor: default; }
+
+dialog { border: 0; border-radius: 12px; padding: 0; width: min(480px, calc(100vw - 32px)); background: var(--pannello); color: var(--testo); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); }
+dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+dialog form { padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 85vh; overflow-y: auto; }
+dialog h3 { margin: 0; font-size: 18px; }
+dialog label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--testo-2); flex: 1; min-width: 0; }
+dialog input, dialog textarea { font: inherit; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--bordo); background: var(--barra); color: var(--testo); resize: vertical; width: 100%; }
+.riga { display: flex; gap: 12px; flex-wrap: wrap; }
+.azioni { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.btn { border: 0; padding: 9px 16px; border-radius: 20px; background: var(--barra); }
+.primario { border: 0; padding: 9px 18px; border-radius: 20px; background: var(--verde); color: #fff !important; font-weight: 500; }
+.pericolo { background: var(--pericolo); color: #fff !important; }
+.partecipanti { list-style: none; margin: 0; padding: 0; }
+.partecipanti li { display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--bordo); }
+.partecipanti .nome { font-weight: 600; }
+
+.indietro { display: none; }
+@media (max-width: 760px) {
+  .sidebar { width: 100%; border-right: 0; }
+  .chat { display: none; }
+  .app.in-chat .sidebar { display: none; }
+  .app.in-chat .chat { display: flex; }
+  .indietro { display: block; }
+  .msg { max-width: 94%; }
+  .barra { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="app" id="app">
+  <aside class="sidebar">
+    <header class="barra">
+      <div class="avatar">💸</div>
+      <div class="titolo-barra">Agenzia Idee</div>
+      <button id="nuova" class="icona" title="Nuova sessione" aria-label="Nuova sessione">＋</button>
+    </header>
+    <div id="avviso" class="avviso" hidden></div>
+    <ul id="elenco" class="elenco"></ul>
+  </aside>
+
+  <main class="chat">
+    <header class="barra">
+      <button id="indietro" class="icona indietro" title="Indietro" aria-label="Indietro">←</button>
+      <div class="avatar">💸</div>
+      <div class="info-chat">
+        <div id="titolo-chat" class="titolo-barra">Agenzia Idee</div>
+        <div id="sotto-titolo" class="sotto"></div>
+      </div>
+      <button id="partecipanti-btn" class="icona" title="Partecipanti" aria-label="Partecipanti">👥</button>
+      <button id="elimina" class="icona" title="Elimina chat" aria-label="Elimina chat" hidden>🗑️</button>
+    </header>
+    <section id="messaggi" class="messaggi" aria-live="polite"></section>
+    <div id="ripresa" class="ripresa" hidden>
+      <span id="ripresa-testo">Il lavoro del team si è interrotto.</span>
+      <button id="riprendi" class="primario">Riprendi</button>
+    </div>
+    <form id="scrivi" class="scrivi">
+      <input id="testo" autocomplete="off" placeholder="Scrivi un messaggio… (usa @Nome per chiedere a qualcuno)" aria-label="Messaggio">
+      <button id="invia" class="invia" title="Invia" aria-label="Invia">➤</button>
+    </form>
+  </main>
+</div>
+
+<dialog id="dialogo-nuova">
+  <form method="dialog" id="form-nuova">
+    <h3>Nuova sessione</h3>
+    <p class="sotto" style="white-space:normal">Più dettagli dai, più le idee saranno su misura. Il team farà circa 15–20 richieste a Claude, che contano sui limiti del tuo account.</p>
+    <label>Nome della chat <input id="f-titolo" name="titolo" placeholder="es. Idee di ottobre"></label>
+    <div class="riga">
+      <label>Ore a settimana <input id="f-ore" name="ore" type="number" min="0" step="0.5" placeholder="3"></label>
+      <label>Budget iniziale (€) <input id="f-budget" name="budget" type="number" min="0" placeholder="100"></label>
+    </div>
+    <label>Cosa sai fare <textarea id="f-competenze" name="competenze" rows="2" placeholder="es. so usare Excel, cucino bene, parlo inglese"></textarea></label>
+    <label>Cosa possiedi / risorse <textarea id="f-risorse" name="risorse" rows="2" placeholder="es. una cantina libera, una reflex, una bici"></textarea></label>
+    <label>Altre note <textarea id="f-note" name="note" rows="2" placeholder="es. vivo a Bologna, niente video con la mia faccia"></textarea></label>
+    <div class="azioni">
+      <button value="annulla" class="btn" formnovalidate>Annulla</button>
+      <button value="ok" class="primario">Avvia il team 🚀</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dialogo-partecipanti">
+  <form method="dialog">
+    <h3>Partecipanti · 12 agenti + tu</h3>
+    <ul id="partecipanti" class="partecipanti"></ul>
+    <div class="azioni"><button class="primario">Chiudi</button></div>
+  </form>
+</dialog>
+
+<dialog id="dialogo-elimina">
+  <form method="dialog">
+    <h3>Eliminare questa chat?</h3>
+    <p class="sotto" style="white-space:normal">La chat e i piani degli agenti verranno cancellati per sempre.</p>
+    <div class="azioni">
+      <button value="annulla" class="btn">Annulla</button>
+      <button value="ok" class="primario pericolo">Elimina</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+// =====================================================================
+// IL TEAM
+// =====================================================================
+const REGOLE = `Fai parte di "Agenzia Idee", una chat di gruppo stile WhatsApp in cui un team di agenti AI aiuta una persona (l'utente, chiamato "il capo") a trovare e avviare modi per guadagnare un po' di soldi SENZA dover dedicare molto tempo.
+
+Regole valide per tutto il team:
+- Scrivi sempre in italiano, con tono da chat di lavoro: diretto, concreto, un po' informale.
+- Il campo "messaggio_chat" è il tuo messaggio nel gruppo: breve (2-6 frasi), puoi usare *grassetto* in stile WhatsApp e qualche emoji, senza esagerare. I dettagli vanno negli altri campi.
+- Solo idee legali in Italia/UE, etiche e realistiche. Niente schemi piramidali/MLM, gioco d'azzardo, trading o crypto speculativi, recensioni false, spam, violazioni di copyright o dei termini delle piattaforme.
+- Sii onesto sui guadagni: stime prudenti in euro, mai promesse. Se qualcosa richiede partita IVA, tasse o permessi, dillo.
+- Tieni sempre a mente il vincolo principale: il capo vuole impegnare POCO tempo.`;
+
+const AGENTI = [
+  ["ideatore_1", "Luca", "Ideatore · digitale", "💡", "#e5732e", "Inventi idee di guadagno ONLINE e DIGITALI a basso impegno: prodotti digitali, contenuti riutilizzabili, piccoli servizi automatizzabili, rendite da asset digitali. Proponi esattamente 3 idee diverse tra loro, adatte al profilo del capo. Preferisci idee che, una volta avviate, girano quasi da sole."],
+  ["ideatore_2", "Sofia", "Ideatrice · alternative", "🌱", "#2ea36b", "Inventi idee di guadagno ALTERNATIVE e meno ovvie: valorizzare cose che il capo già possiede (spazi, oggetti, competenze, tempo morto), opportunità locali, nicchie poco sfruttate, micro-attività ibride online/offline. Proponi esattamente 3 idee diverse tra loro e diverse da quelle \"classiche\" da guru di internet."],
+  ["analista_1", "Marco", "Analista · mercato", "📊", "#3b6fd8", "Controlli a fondo le idee dal punto di vista del MERCATO: c'è domanda reale? quanta concorrenza? le stime di guadagno sono credibili? quanto è saturo? Valuta OGNI idea ricevuta. Se un'idea non regge la scarti (momentaneamente: un revisore la riguarderà), spiegando il motivo in modo preciso e verificabile."],
+  ["analista_2", "Giulia", "Analista · fattibilità", "🔍", "#9b4dca", "Controlli a fondo le idee dal punto di vista della FATTIBILITÀ: il tempo richiesto al capo è davvero basso? il costo iniziale è compatibile con il budget? servono competenze che il capo non ha? ci sono rischi o ostacoli legali/fiscali in Italia? Valuta OGNI idea ricevuta. Se un'idea non è fattibile la scarti (momentaneamente: un revisore la riguarderà), spiegando il motivo in modo preciso."],
+  ["revisore", "Paolo", "Revisore scarti", "♻️", "#b8860b", "Ricevi le idee scartate dagli analisti e fai un secondo controllo indipendente. Gli analisti a volte sbagliano: scartano per un dettaglio sistemabile o per una stima troppo pessimista. Per ogni idea: \"ripescata\" se con una modifica concreta diventa fattibile (scrivi la correzione); \"scartata_definitivamente\" se è davvero impossibile o non conveniente. Sii equo: né buonista né distruttivo."],
+  ["ceo", "Elena", "CEO", "👑", "#c0392b", "Sei la CEO. Ricevi le idee sopravvissute ai controlli con le valutazioni degli analisti e del revisore. Decidi GO o NO_GO per ciascuna in base a: rapporto guadagno/tempo del capo, rischio, costo, velocità dei primi risultati. Dai GO al massimo a 3 idee (anche 0 se nessuna merita). Per ogni idea assegna lo specialista più adatto: spec_digitale (Chiara: contenuti, social, prodotti digitali, piattaforme creator); spec_vendite (Davide: e-commerce, marketplace, vendita/affitto di beni e servizi, attività locali); spec_automazione (Andrea: strumenti no-code, AI, automazioni, siti e processi che girano da soli). Quando parli con il capo sei chiara e decisa."],
+  ["spec_digitale", "Chiara", "Specialista · contenuti & digitale", "🎨", "#d6336c", "Sei esperta di contenuti, social media, prodotti digitali e piattaforme per creator. Trasformi l'idea che ti viene assegnata in un piano operativo concreto: passi numerati, strumenti precisi (con nomi reali), costi, cosa deve fare il capo e cosa può essere automatizzato, cosa fare nei primi 7 giorni, KPI."],
+  ["spec_vendite", "Davide", "Specialista · vendite & e-commerce", "🛒", "#0c8599", "Sei esperto di e-commerce, marketplace (Vinted, eBay, Etsy, Amazon, Subito, Airbnb...), vendita e affitto di beni e servizi, attività locali. Trasformi l'idea che ti viene assegnata in un piano operativo concreto: passi numerati, strumenti precisi, costi, cosa deve fare il capo e cosa si può delegare/automatizzare, cosa fare nei primi 7 giorni, KPI."],
+  ["spec_automazione", "Andrea", "Specialista · automazione & tech", "🤖", "#5f3dc4", "Sei esperto di strumenti no-code, AI, automazioni (Zapier, Make, n8n...), siti e processi che girano da soli. Trasformi l'idea che ti viene assegnata in un piano operativo concreto: passi numerati, strumenti precisi, costi, cosa deve fare il capo e cosa viene automatizzato, cosa fare nei primi 7 giorni, KPI. Il tuo obiettivo è ridurre al minimo le ore del capo."],
+  ["ctrl_qualita", "Roberto", "Controllore · qualità", "🧐", "#5c6770", "Sei un controllore. Rileggi tutto il lavoro del team (idee, valutazioni, decisioni, piani) e cerchi dimenticanze, passaggi mancanti, incoerenze tra quello che è stato deciso e quello che c'è nei piani, errori di logica o di calcolo. Segnala solo problemi reali e utili, con una soluzione concreta. Se è tutto a posto, restituisci una lista vuota."],
+  ["ctrl_rischi", "Francesca", "Controllore · legale, fiscale & rischi", "⚖️", "#2b8a3e", "Sei una controllora. Rileggi i piani approvati e verifichi aspetti legali e fiscali italiani (es. prestazione occasionale vs partita IVA, regime forfettario, DAC7 per i marketplace, privacy/GDPR, diritti d'autore, regole delle piattaforme, normative locali per affitti) e rischi economici o reputazionali. Segnala solo problemi reali con una soluzione concreta. Non sei un avvocato: se serve, consiglia di sentire un commercialista. Se è tutto a posto, restituisci una lista vuota."],
+  ["ctrl_tempo", "Matteo", "Controllore · tempo & budget", "⏱️", "#e67700", "Sei un controllore. Verifichi che ogni piano rispetti DAVVERO i vincoli del capo: ore settimanali disponibili e budget iniziale. Ricalcola il tempo reale richiesto (inclusi assistenza clienti, gestione, imprevisti) e i costi totali, anche ricorrenti. Segnala i piani che sforano o che sottostimano il tempo, con una soluzione. Se è tutto a posto, restituisci una lista vuota."],
+].map(([id, nome, ruolo, avatar, colore, compito]) => ({ id, nome, ruolo, avatar, colore, system: `${REGOLE}\n\nIl tuo nome è ${nome} (${ruolo}).\n${compito}` }));
+const AG = Object.fromEntries(AGENTI.map((a) => [a.id, a]));
+AG.tu = { nome: "Tu", avatar: "🙂" };
+
+// Forma della risposta JSON che ogni tipo di compito deve restituire.
+const FORMATI = {
+  idee: `{"messaggio_chat": string, "idee": [{"titolo": string, "descrizione": string, "come_si_guadagna": string, "ore_settimanali_tue": number, "costo_iniziale_eur": number, "guadagno_mensile_stimato_eur": string (intervallo prudente, es. "50-200"), "tempo_per_primi_guadagni": string}]}`,
+  analisi: `{"messaggio_chat": string, "valutazioni": [{"id": string (l'ID dell'idea, es. "I1"), "esito": "approvata" | "scartata", "punteggio": intero da 1 a 10, "motivo": string}]}`,
+  revisione: `{"messaggio_chat": string, "decisioni": [{"id": string, "esito": "ripescata" | "scartata_definitivamente", "motivo": string, "correzione": string (se ripescata: come modificare l'idea; altrimenti "")}]}`,
+  ceo: `{"messaggio_chat": string, "decisioni": [{"id": string, "decisione": "GO" | "NO_GO", "motivo": string, "specialista": "spec_digitale" | "spec_vendite" | "spec_automazione", "priorita": intero (1 = la più importante)}]}`,
+  piano: `{"messaggio_chat": string, "piano": {"obiettivo": string, "passi": [{"titolo": string, "dettaglio": string, "chi": "tu" | "automatico" | "team", "tempo_stimato": string}], "strumenti": [string], "costi": [string], "ore_settimanali_tue": number, "primi_7_giorni": [string], "kpi": [string], "aspetti_legali_fiscali": string}}`,
+  controllo: `{"messaggio_chat": string, "problemi": [{"id_idea": string (ID dell'idea o "generale"), "gravita": "alta" | "media" | "bassa", "problema": string, "soluzione": string}]}`,
+  messaggio: `{"messaggio_chat": string}`,
+};
+// I compiti più delicati usano il modello più capace.
+const LIVELLO = { ceo: "complex", piano: "complex" };
+
+// =====================================================================
+// COLLEGAMENTO A CLAUDE E SALVATAGGIO
+// =====================================================================
+let sample = null;   // funzione per chiedere a Claude (null = non disponibile in questa vista)
+let archivio = null; // dove si salvano le chat
+
+const json = (x) => JSON.stringify(x, null, 2);
+const lista = (x) => (Array.isArray(x) ? x : []);
+
+const ERRORI = {
+  not_granted: "Non hai autorizzato la pagina a usare Claude. Ricarica la pagina e premi \"Consenti\" quando te lo chiede.",
+  sampling_disabled: "Claude non è disponibile per questo account.",
+  rate_limited: "Hai raggiunto il limite di utilizzo di Claude per ora. Riprova più tardi con il pulsante Riprendi.",
+  session_expired: "La sessione di claude.ai è scaduta: accedi di nuovo e ricarica la pagina.",
+  refused: "Claude ha rifiutato questa richiesta.",
+  invalid_json: "La risposta dell'agente non era nel formato giusto. Premi Riprendi per riprovare.",
+  empty_completion: "L'agente non ha risposto. Premi Riprendi per riprovare.",
+  prompt_too_large: "La conversazione è diventata troppo lunga per un agente.",
+  upstream_error: "Problema di connessione con Claude. Premi Riprendi per riprovare.",
+};
+const messaggioErrore = (e) => ERRORI[e?.code] ?? (e?.message ? `Errore: ${e.message}` : ERRORI.upstream_error);
+
+async function chiedi(s, idAgente, formato, contenuto) {
+  if (s.esempio) return rispostaEsempio(idAgente, formato, contenuto);
+  if (!sample) throw { code: "sampling_disabled" };
+  const prompt = `${AG[idAgente].system}\n\n${contenuto}\n\nRispondi SOLO con un oggetto JSON valido, senza altro testo, con esattamente questa struttura:\n${FORMATI[formato]}`;
+  const out = await sample.json(prompt, { modelTier: LIVELLO[formato] ?? "default" });
+  if (!out || typeof out.messaggio_chat !== "string") throw { code: "invalid_json" };
+  return out;
+}
+
+function creaArchivioLocale() {
+  const CHIAVE = "agenzia-idee-chat";
+  const leggi = () => { try { return JSON.parse(localStorage.getItem(CHIAVE)) ?? {}; } catch { return {}; } };
+  const scrivi = (tutte) => { try { localStorage.setItem(CHIAVE, JSON.stringify(tutte)); } catch {} };
+  return {
+    tutte: async () => Object.values(leggi()),
+    salva: async (s) => { const t = leggi(); t[s.id] = s; scrivi(t); },
+    elimina: async (id) => { const t = leggi(); delete t[id]; scrivi(t); },
+  };
+}
+
+async function creaArchivio() {
+  try {
+    const [db, user] = await Promise.all([window.claude?.use("db"), window.claude?.use("user")]);
+    const uid = db && user ? await user.id() : null;
+    if (!uid) return creaArchivioLocale();
+    const chats = db.collection("data/users/" + uid);
+    return {
+      tutte: async () => (await chats.get()).docs.map((d) => JSON.parse(JSON.stringify(d.data()))),
+      salva: (s) => chats.doc(s.id).set(s),
+      elimina: (id) => chats.doc(id).delete(),
+    };
+  } catch {
+    return creaArchivioLocale();
+  }
+}
+
+// Un salvataggio alla volta per chat, sempre con l'ultima versione.
+const salvataggi = new Map();
+function salva(s) {
+  if (s.esempio || !archivio) return;
+  const stato = salvataggi.get(s.id) ?? { inCorso: false, ancora: false };
+  salvataggi.set(s.id, stato);
+  if (stato.inCorso) { stato.ancora = true; return; }
+  stato.inCorso = true;
+  (async () => {
+    do {
+      stato.ancora = false;
+      const { scrivendo, ...copia } = s;
+      try { await archivio.salva(JSON.parse(JSON.stringify(copia))); }
+      catch (e) { console.error("Salvataggio non riuscito", e); }
+    } while (stato.ancora);
+    stato.inCorso = false;
+  })();
+}
+
+// =====================================================================
+// CHAT: messaggi e "sta scrivendo…"
+// =====================================================================
+const sessioni = new Map();
+let corrente = null;
+const inEsecuzione = new Set();
+
+function aggiungi(s, da, testo, dettagli) {
+  const m = { id: crypto.randomUUID(), da, testo: String(testo ?? ""), dettagli, ora: new Date().toISOString() };
+  s.messaggi.push(m);
+  salva(s);
+  if (s === corrente) mostraMessaggio(m, true);
+  disegnaElenco();
+}
+const sistema = (s, testo) => aggiungi(s, "sistema", testo);
+
+function scrive(s, id, attivo) {
+  s.scrivendo = attivo ? [...new Set([...(s.scrivendo ?? []), id])] : (s.scrivendo ?? []).filter((x) => x !== id);
+  if (s === corrente) aggiornaSottotitolo();
+}
+
+async function turno(s, idAgente, formato, contenuto, dettagli) {
+  scrive(s, idAgente, true);
+  try {
+    const out = await chiedi(s, idAgente, formato, contenuto);
+    aggiungi(s, idAgente, out.messaggio_chat, dettagli ? dettagli(out) : undefined);
+    return out;
+  } finally {
+    scrive(s, idAgente, false);
+  }
+}
+
+// =====================================================================
+// IL FLUSSO DI LAVORO
+// =====================================================================
+function descriviProfilo(p) {
+  return [
+    `Ore a settimana che il capo può dedicare: ${p.ore || "poche (non specificato)"}`,
+    `Budget iniziale: ${p.budget ? `${p.budget} €` : "molto basso (non specificato)"}`,
+    `Competenze / cosa sa fare: ${p.competenze || "non specificato"}`,
+    `Cosa possiede / risorse disponibili: ${p.risorse || "non specificato"}`,
+    `Altre note: ${p.note || "nessuna"}`,
+  ].join("\n");
+}
+const contesto = (s, testo) => `PROFILO DEL CAPO:\n${descriviProfilo(s.profilo)}\n\n${testo}`;
+const base = (i) => ({ id: i.id, titolo: i.titolo, descrizione: i.descrizione, come_si_guadagna: i.come_si_guadagna, ore_settimanali_tue: i.ore_settimanali_tue, costo_iniziale_eur: i.costo_iniziale_eur, guadagno_mensile_stimato_eur: i.guadagno_mensile_stimato_eur, tempo_per_primi_guadagni: i.tempo_per_primi_guadagni, correzione_revisore: i.revisione?.correzione || undefined });
+const idee = (s) => Object.values(s.idee);
+const ICONA_GRAVITA = { alta: "🔴", media: "🟠", bassa: "🟡" };
+
+function formattaIdea(i) {
+  return [`*${i.titolo ?? "Idea"}*`, i.descrizione, `💶 ${i.come_si_guadagna ?? "-"}`,
+    `⏱️ ${i.ore_settimanali_tue ?? "?"} h/settimana · 💰 avvio ${i.costo_iniziale_eur ?? "?"} € · 📈 ${i.guadagno_mensile_stimato_eur ?? "?"} €/mese · ⌛ primi guadagni: ${i.tempo_per_primi_guadagni ?? "?"}`].join("\n");
+}
+function formattaPiano(p) {
+  const chi = { tu: "👤 tu", automatico: "⚙️ auto", team: "🤝 team" };
+  return [`🎯 ${p.obiettivo ?? ""}`, `⏱️ Tempo tuo: *${p.ore_settimanali_tue ?? "?"} h/settimana*`, "", "*Passi*",
+    ...lista(p.passi).map((x, k) => `${k + 1}. *${x.titolo}* (${chi[x.chi] ?? x.chi}, ${x.tempo_stimato}) – ${x.dettaglio}`),
+    "", "*Primi 7 giorni*", ...lista(p.primi_7_giorni).map((x) => `• ${x}`), "",
+    `*Strumenti:* ${lista(p.strumenti).join(", ")}`, `*Costi:* ${lista(p.costi).join("; ")}`,
+    `*KPI:* ${lista(p.kpi).join("; ")}`, `*Legale/fiscale:* ${p.aspetti_legali_fiscali ?? "-"}`].join("\n");
+}
+
+async function preparaPiano(s, i, extra = "") {
+  const out = await turno(s, i.decisione_ceo.specialista, "piano",
+    contesto(s, `La CEO ti ha affidato questa idea:\n${json({ ...base(i), valutazioni: Object.values(i.valutazioni), nota_ceo: i.decisione_ceo.motivo })}${extra}\nPrepara il piano operativo completo.`),
+    (o) => `*Piano per ${i.id} – ${i.titolo}*\n\n${formattaPiano(o.piano ?? {})}`);
+  i.piano = out.piano ?? {};
+  salva(s);
+}
+
+// Ogni fase riparte da capo se viene interrotta (pulsante "Riprendi").
+const FASI = [
+  async function ideazione(s) {
+    sistema(s, "🚀 *Fase 1 – Idee.* Luca e Sofia stanno pensando a come farti guadagnare.");
+    const proposte = await Promise.all(["ideatore_1", "ideatore_2"].map((id) =>
+      turno(s, id, "idee", contesto(s, "Proponi le tue 3 idee."), (o) => lista(o.idee).map(formattaIdea).join("\n\n"))));
+    s.idee = {};
+    let n = 0;
+    proposte.forEach((out, k) => {
+      for (const i of lista(out.idee)) {
+        const id = `I${++n}`;
+        s.idee[id] = { ...i, id, autore: k === 0 ? "ideatore_1" : "ideatore_2", valutazioni: {}, stato: "proposta" };
+      }
+    });
+  },
+
+  async function analisi(s) {
+    sistema(s, "🔎 *Fase 2 – Analisi.* Marco e Giulia controllano tutte le idee a fondo.");
+    const elenco = json(idee(s).map(base));
+    await Promise.all(["analista_1", "analista_2"].map(async (id) => {
+      const out = await turno(s, id, "analisi", contesto(s, `Valuta ognuna di queste idee (usa gli ID forniti):\n${elenco}`), (o) =>
+        lista(o.valutazioni).map((v) => `${v.esito === "approvata" ? "✅" : "❌"} *${v.id}* (${v.punteggio}/10) – ${v.motivo}`).join("\n"));
+      for (const v of lista(out.valutazioni)) if (s.idee[v.id]) s.idee[v.id].valutazioni[id] = v;
+    }));
+    for (const i of idee(s)) {
+      const vs = Object.values(i.valutazioni);
+      i.stato = vs.length === 2 && vs.every((v) => v.esito === "approvata") ? "approvata" : "scartata_temp";
+    }
+  },
+
+  async function revisione(s) {
+    const scartate = idee(s).filter((i) => i.stato === "scartata_temp");
+    if (!scartate.length) { sistema(s, "♻️ Nessuna idea scartata: il revisore non ha niente da riguardare."); return; }
+    sistema(s, `♻️ *Fase 3 – Seconda chance.* ${scartate.length === 1 ? "Un'idea scartata passa" : `${scartate.length} idee scartate passano`} a Paolo.`);
+    const out = await turno(s, "revisore", "revisione",
+      contesto(s, `Idee scartate momentaneamente, con le valutazioni degli analisti:\n${json(scartate.map((i) => ({ ...base(i), valutazioni: Object.values(i.valutazioni) })))}`),
+      (o) => lista(o.decisioni).map((d) => `${d.esito === "ripescata" ? "🔄 ripescata" : "🗑️ scartata definitivamente"} *${d.id}* – ${d.motivo}${d.correzione ? `\n   ↳ _correzione:_ ${d.correzione}` : ""}`).join("\n"));
+    for (const d of lista(out.decisioni)) {
+      const i = s.idee[d.id];
+      if (!i || i.stato !== "scartata_temp") continue;
+      i.revisione = d;
+      i.stato = d.esito === "ripescata" ? "approvata" : "scartata";
+    }
+    for (const i of scartate) if (i.stato === "scartata_temp") i.stato = "scartata";
+  },
+
+  async function decisioneCeo(s) {
+    const vive = idee(s).filter((i) => ["approvata", "go", "no_go"].includes(i.stato));
+    if (!vive.length) {
+      await turno(s, "ceo", "messaggio", contesto(s, `Tutte le idee sono state scartate:\n${json(idee(s))}\nSpiega al capo in breve perché e cosa gli consigli di dirci per il prossimo giro (es. più ore, più budget, altre competenze).`));
+      s.fine = true;
+      return;
+    }
+    sistema(s, `👑 *Fase 4 – Decisione.* ${vive.length === 1 ? "Un'idea arriva" : `${vive.length} idee arrivano`} sul tavolo di Elena.`);
+    const out = await turno(s, "ceo", "ceo",
+      contesto(s, `Idee sopravvissute con valutazioni e revisioni:\n${json(vive.map((i) => ({ ...base(i), valutazioni: Object.values(i.valutazioni), revisione: i.revisione })))}\nDecidi GO o NO_GO per ciascuna (max 3 GO) e assegna lo specialista.`),
+      (o) => [...lista(o.decisioni)].sort((a, b) => a.priorita - b.priorita)
+        .map((d) => `${d.decisione === "GO" ? "🟢 GO" : "🔴 NO GO"} *${d.id}* ${s.idee[d.id]?.titolo ?? ""} – ${d.motivo}${d.decisione === "GO" && AG[d.specialista] ? `\n   ↳ affidata a ${AG[d.specialista].nome}` : ""}`).join("\n"));
+    s.go = [];
+    for (const d of [...lista(out.decisioni)].sort((a, b) => a.priorita - b.priorita)) {
+      const i = s.idee[d.id];
+      if (!i || !vive.includes(i)) continue;
+      if (!AG[d.specialista]?.id?.startsWith("spec_")) d.specialista = "spec_automazione";
+      i.decisione_ceo = d;
+      i.stato = d.decisione === "GO" && s.go.length < 3 ? "go" : "no_go";
+      if (i.stato === "go") s.go.push(i.id);
+    }
+    if (!s.go.length) {
+      sistema(s, "🛑 La CEO non ha dato il via a nessuna idea. Puoi chiederle perché qui in chat o avviare una nuova sessione con un profilo diverso.");
+      s.fine = true;
+    }
+  },
+
+  async function piani(s) {
+    sistema(s, "🛠️ *Fase 5 – Esecuzione.* Gli specialisti preparano i piani operativi.");
+    await Promise.all(s.go.map((id) => preparaPiano(s, s.idee[id])));
+  },
+
+  async function controlli(s) {
+    sistema(s, "🧐 *Fase 6 – Controlli.* Roberto, Francesca e Matteo verificano che non manchi niente.");
+    const dossier = json(idee(s).map(({ autore, ...i }) => i));
+    s.problemi = [];
+    await Promise.all(["ctrl_qualita", "ctrl_rischi", "ctrl_tempo"].map(async (id) => {
+      const out = await turno(s, id, "controllo", contesto(s, `Ecco tutto il lavoro del team (idee con stato, valutazioni, decisioni e piani; i piani ci sono solo per le idee con stato "go"):\n${dossier}`), (o) =>
+        lista(o.problemi).length ? lista(o.problemi).map((p) => `${ICONA_GRAVITA[p.gravita] ?? "🟡"} *${p.id_idea}* – ${p.problema}\n   ↳ _soluzione:_ ${p.soluzione}`).join("\n") : "Nessun problema rilevato ✅");
+      for (const p of lista(out.problemi)) s.problemi.push({ ...p, da: AG[id].nome });
+    }));
+  },
+
+  async function correzioni(s) {
+    const perIdea = (i) => s.problemi.filter((p) => p.id_idea === i.id || p.id_idea === "generale");
+    const daCorreggere = s.go.map((id) => s.idee[id]).filter((i) => perIdea(i).some((p) => p.gravita !== "bassa"));
+    if (!daCorreggere.length) return;
+    sistema(s, `🔧 *Fase 7 – Correzioni.* ${daCorreggere.length === 1 ? "Un piano va sistemato" : `${daCorreggere.length} piani vanno sistemati`}.`);
+    await Promise.all(daCorreggere.map((i) => preparaPiano(s, i,
+      `\n\nIL TUO PIANO PRECEDENTE:\n${json(i.piano)}\n\nI CONTROLLORI HANNO SEGNALATO QUESTI PROBLEMI (risolvili tutti nel nuovo piano e dì nel messaggio cosa hai cambiato):\n${json(perIdea(i))}`)));
+  },
+
+  async function riepilogo(s) {
+    await turno(s, "ceo", "messaggio", contesto(s, `Il lavoro è finito. Piani finali:\n${json(s.go.map((id) => ({ id, titolo: s.idee[id].titolo, piano: s.idee[id].piano })))}\nScrivi al capo un riepilogo finale: quali idee partono, quanto tempo e soldi richiedono, e la PRIMA cosa concreta che deve fare oggi. Massimo 8 frasi.`));
+  },
+];
+
+async function esegui(s) {
+  if (inEsecuzione.has(s.id)) return;
+  inEsecuzione.add(s.id);
+  s.stato = "in_corso";
+  salva(s);
+  aggiornaChat();
+  try {
+    while (!s.fine && s.fase < FASI.length) {
+      await FASI[s.fase](s);
+      s.fase++;
+      salva(s);
+    }
+    s.stato = "completata";
+  } catch (e) {
+    console.error(e);
+    sistema(s, `⚠️ ${messaggioErrore(e)}`);
+    s.stato = "errore";
+  } finally {
+    s.scrivendo = [];
+    inEsecuzione.delete(s.id);
+    salva(s);
+    aggiornaChat();
+    disegnaElenco();
+  }
+}
+
+async function rispondiAlCapo(s, testo) {
+  const menzionato = AGENTI.find((a) => new RegExp(`@${a.nome}\\b`, "i").test(testo));
+  const id = menzionato?.id ?? "ceo";
+  const recenti = s.messaggi.slice(-30).map((m) => `${m.da === "tu" ? "CAPO" : m.da === "sistema" ? "SISTEMA" : AG[m.da]?.nome}: ${m.testo}`).join("\n");
+  try {
+    await turno(s, id, "messaggio", contesto(s, `STATO DEL LAVORO:\n${json(idee(s))}\n\nULTIMI MESSAGGI DEL GRUPPO:\n${recenti}\n\nIl capo ha appena scritto: "${testo}"\nRispondigli tu nel gruppo, restando nel tuo ruolo.`));
+  } catch (e) {
+    sistema(s, `⚠️ ${AG[id].nome} non è riuscito a risponderti. ${messaggioErrore(e)}`);
+  }
+}
+
+// =====================================================================
+// CHAT DI ESEMPIO (risposte preparate, mostrate prima della prima sessione)
+// =====================================================================
+const IDEE_ESEMPIO = {
+  ideatore_1: [
+    ["Pacchetto di template Canva", "20 template per piccoli negozi da vendere su Etsy.", "Vendita di file digitali", 2, 13, "30-150", "3-6 settimane"],
+    ["Newsletter di nicchia con sponsor", "Newsletter settimanale curata con l'AI su un hobby che conosci.", "Sponsor e affiliazioni", 3, 0, "0-100", "3-6 mesi"],
+    ["Mini-corso registrato una volta", "Corso breve su una tua competenza, venduto su piattaforma.", "Vendita del corso", 2, 30, "50-300", "1-2 mesi"],
+  ],
+  ideatore_2: [
+    ["Noleggio attrezzatura inutilizzata", "Metti a noleggio attrezzi o strumenti che usi poco.", "Noleggio a giornata", 1, 0, "40-120", "2 settimane"],
+    ["Svuota-cantina su Vinted e Subito", "Vendi ciò che non usi, con foto fatte in un pomeriggio.", "Vendita dell'usato", 2, 0, "50-200 (una tantum)", "1 settimana"],
+    ["Posto auto o deposito in affitto", "Affitti uno spazio che non usi come deposito o parcheggio.", "Canone mensile", 0.5, 10, "30-100", "1 mese"],
+  ],
+};
+function rispostaEsempio(idAgente, formato, contenuto) {
+  const ids = [...new Set([...contenuto.matchAll(/"id": "(I\d+)"/g)].map((m) => m[1]))];
+  switch (formato) {
+    case "idee":
+      return { messaggio_chat: idAgente === "ideatore_1" ? "Ecco le mie 3 proposte digitali 💡 tutte poco impegnative una volta avviate." : "Io punto su cose che hai già in casa 🌱 quasi a costo zero.",
+        idee: IDEE_ESEMPIO[idAgente].map(([titolo, descrizione, come_si_guadagna, ore, costo, guadagno, tempo]) => ({ titolo, descrizione, come_si_guadagna, ore_settimanali_tue: ore, costo_iniziale_eur: costo, guadagno_mensile_stimato_eur: guadagno, tempo_per_primi_guadagni: tempo })) };
+    case "analisi":
+      return { messaggio_chat: idAgente === "analista_1" ? "Ho controllato la domanda per ognuna. La newsletter parte troppo lenta 📉" : "Fattibilità controllata: il corso chiede più ore di quelle che hai.",
+        valutazioni: ids.map((id, k) => { const no = idAgente === "analista_1" ? k === 1 : k === 2; return { id, esito: no ? "scartata" : "approvata", punteggio: no ? 4 : 7, motivo: no ? "Rapporto tempo/guadagno poco convincente all'inizio." : "Domanda presente e impegno contenuto." }; }) };
+    case "revisione":
+      return { messaggio_chat: "Ho riguardato i due scarti: il corso si salva se lo accorciamo, la newsletter no.",
+        decisioni: ids.map((id, k) => ({ id, esito: k === 1 ? "ripescata" : "scartata_definitivamente", motivo: k === 1 ? "Lo scarto era per la durata, che si può tagliare." : "Servono troppi mesi prima dei primi sponsor.", correzione: k === 1 ? "Corso di 45 minuti invece di 3 ore." : "" })) };
+    case "ceo":
+      return { messaggio_chat: "Ho deciso 👑 partiamo con le due idee più rapide, le altre restano in panchina.",
+        decisioni: ids.map((id, k) => ({ id, decisione: k < 2 ? "GO" : "NO_GO", motivo: k < 2 ? "Miglior rapporto guadagno/tempo." : "Non prioritaria ora.", specialista: k === 0 ? "spec_digitale" : "spec_automazione", priorita: k + 1 })) };
+    case "piano":
+      return { messaggio_chat: contenuto.includes("PIANO PRECEDENTE") ? "Piano aggiornato: ho aggiunto il tempo per rispondere ai clienti 🔧" : "Piano pronto! Il grosso del lavoro lo fai una volta sola.",
+        piano: { obiettivo: "Primi 100 € entro 30 giorni.", passi: [
+          { titolo: "Preparazione", dettaglio: "Crea l'account e prepara il materiale.", chi: "tu", tempo_stimato: "2 h" },
+          { titolo: "Pubblicazione", dettaglio: "Pubblica gli annunci con i testi che ti prepariamo.", chi: "team", tempo_stimato: "30 min" },
+          { titolo: "Gestione", dettaglio: "Risposte pronte ai messaggi frequenti.", chi: "automatico", tempo_stimato: "15 min/settimana" }],
+          strumenti: ["Canva", "Etsy", "Google Sheets"], costi: ["0,20 $ per annuncio", "nessun abbonamento"], ore_settimanali_tue: 1.5,
+          primi_7_giorni: ["Giorno 1: apri l'account", "Giorno 2-3: prepara il materiale", "Giorno 4: pubblica"], kpi: ["visite agli annunci", "vendite al mese"],
+          aspetti_legali_fiscali: "Per guadagni piccoli e saltuari può bastare la prestazione occasionale; chiedi conferma a un commercialista." } };
+    case "controllo":
+      return { messaggio_chat: idAgente === "ctrl_tempo" ? "Attenzione: nel primo piano manca il tempo per l'assistenza clienti ⏱️" : "Ho riletto tutto, per me è a posto ✅",
+        problemi: idAgente === "ctrl_tempo" ? [{ id_idea: ids[0] ?? "I1", gravita: "media", problema: "Non è conteggiato il tempo per rispondere ai clienti.", soluzione: "Aggiungere 30 min/settimana e risposte predefinite." }] : [] };
+    default:
+      return { messaggio_chat: "Riepilogo: partono i template Canva e il mini-corso da 45 minuti. Ti servono circa 3 ore a settimana e meno di 50 €. Oggi: apri il negozio su Etsy." };
+  }
+}
+
+async function creaEsempio() {
+  const s = nuovaSessione({ titolo: "Chat di esempio", ore: "3", budget: "50" });
+  s.esempio = true;
+  const t0 = Date.now() - 26 * 60_000;
+  await esegui(s);
+  s.messaggi.forEach((m, k) => (m.ora = new Date(t0 + k * 70_000).toISOString()));
+  return s;
+}
+
+// =====================================================================
+// INTERFACCIA
+// =====================================================================
+const $ = (id) => document.getElementById(id);
+const escape = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const formatta = (x) => escape(x).replace(/\*([^*\n]+)\*/g, "<b>$1</b>").replace(/(^|[\s(])_([^_\n]+)_/g, "$1<i>$2</i>");
+const ora = (iso) => new Date(iso).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+const giornoOra = (iso) => (new Date(iso).toDateString() === new Date().toDateString() ? ora(iso) : new Date(iso).toLocaleDateString("it-IT"));
+const ETICHETTE = { in_corso: "il team sta lavorando…", completata: "lavoro completato", errore: "interrotta", interrotta: "interrotta" };
+const nomeDi = (da) => (da === "sistema" ? "" : AG[da]?.nome ?? da);
+
+function nuovaSessione(profilo) {
+  const s = { id: "c" + crypto.randomUUID().replaceAll("-", "").slice(0, 12), titolo: profilo.titolo?.trim() || `Sessione del ${new Date().toLocaleDateString("it-IT")}`,
+    creata: new Date().toISOString(), profilo, stato: "in_corso", fase: 0, idee: {}, go: [], problemi: [], messaggi: [], scrivendo: [] };
+  sessioni.set(s.id, s);
+  return s;
+}
+
+function disegnaElenco() {
+  const ordinate = [...sessioni.values()].sort((a, b) => (b.messaggi.at(-1)?.ora ?? b.creata).localeCompare(a.messaggi.at(-1)?.ora ?? a.creata));
+  $("elenco").replaceChildren(...ordinate.map((s) => {
+    const li = document.createElement("li");
+    if (s === corrente) li.className = "attiva";
+    const u = s.messaggi.at(-1);
+    li.innerHTML = `<div class="avatar">💸</div><div class="corpo"><div class="riga1"><span class="nome"></span><span class="ora"></span></div><div class="anteprima"></div></div>`;
+    li.querySelector(".nome").textContent = s.titolo;
+    if (s.esempio) li.querySelector(".nome").insertAdjacentHTML("beforeend", `<span class="etichetta">esempio</span>`);
+    li.querySelector(".ora").textContent = giornoOra(u?.ora ?? s.creata);
+    li.querySelector(".anteprima").textContent = inEsecuzione.has(s.id) ? "✍️ il team sta lavorando…" : u ? `${u.da === "sistema" ? "" : nomeDi(u.da) + ": "}${u.testo}`.replace(/[*_]/g, "") : "";
+    li.tabIndex = 0;
+    li.onclick = () => apri(s);
+    li.onkeydown = (e) => e.key === "Enter" && apri(s);
+    return li;
+  }));
+}
+
+let ultimoMittente = null;
+function mostraMessaggio(m, scorri) {
+  const box = $("messaggi");
+  const vicino = box.scrollHeight - box.scrollTop - box.clientHeight < 300;
+  if (m.da === "sistema") {
+    const d = document.createElement("div");
+    d.className = "sistema" + (m.testo.startsWith("⚠️") ? " errore" : "");
+    d.innerHTML = formatta(m.testo);
+    box.append(d);
+    ultimoMittente = null;
+  } else {
+    const a = AG[m.da];
+    const el = document.createElement("div");
+    el.className = `msg${m.da === "tu" ? " mio" : ""}${ultimoMittente === m.da ? " seguito" : ""}`;
+    el.innerHTML = `<div class="avatar">${a?.avatar ?? "🙂"}</div><div class="bolla">
+      ${m.da !== "tu" && ultimoMittente !== m.da ? `<div class="mittente" style="color:${a?.colore}">${escape(a?.nome ?? m.da)}<span class="ruolo">${escape(a?.ruolo ?? "")}</span></div>` : ""}
+      <div class="testo">${formatta(m.testo)}</div>
+      ${m.dettagli ? `<details class="dettagli"><summary>Mostra dettagli</summary><div class="testo">${formatta(m.dettagli)}</div></details>` : ""}
+      <span class="meta">${ora(m.ora)}</span></div>`;
+    box.append(el);
+    ultimoMittente = m.da;
+  }
+  if (scorri && vicino) box.scrollTop = box.scrollHeight;
+}
+
+function aggiornaSottotitolo() {
+  const sotto = $("sotto-titolo");
+  const s = corrente;
+  if (s?.scrivendo?.length) {
+    const nomi = s.scrivendo.map(nomeDi);
+    sotto.innerHTML = `<span class="scrive">${escape(nomi.join(", "))} ${nomi.length > 1 ? "stanno" : "sta"} scrivendo…</span>`;
+  } else if (s) {
+    sotto.textContent = s.esempio ? "chat di esempio · risposte preparate" : inEsecuzione.has(s.id) ? ETICHETTE.in_corso : ETICHETTE[s.stato] ?? "";
+  } else {
+    sotto.textContent = AGENTI.map((a) => a.nome).join(", ");
+  }
+}
+
+function aggiornaChat() {
+  const s = corrente;
+  if (!s) return;
+  const ferma = !s.esempio && !inEsecuzione.has(s.id) && s.stato !== "completata";
+  $("ripresa").hidden = !ferma || !sample;
+  $("ripresa-testo").textContent = s.fase === 0 && !s.messaggi.length ? "Il team non ha ancora iniziato." : "Il lavoro del team si è interrotto.";
+  $("testo").disabled = $("invia").disabled = s.esempio || !sample;
+  $("testo").placeholder = s.esempio ? "Questa è una chat di esempio: premi ＋ per avviarne una tua" : !sample ? "Apri la pagina su claude.ai per scrivere agli agenti" : "Scrivi un messaggio… (usa @Nome per chiedere a qualcuno)";
+  $("elimina").hidden = s.esempio || inEsecuzione.has(s.id);
+  aggiornaSottotitolo();
+}
+
+function apri(s) {
+  corrente = s;
+  $("app").classList.add("in-chat");
+  $("titolo-chat").textContent = s.titolo;
+  $("messaggi").replaceChildren();
+  ultimoMittente = null;
+  s.messaggi.forEach((m) => mostraMessaggio(m, false));
+  $("messaggi").scrollTop = s.esempio ? 0 : $("messaggi").scrollHeight;
+  aggiornaChat();
+  disegnaElenco();
+}
+
+// ---------- Azioni ----------
+$("nuova").onclick = () => {
+  if (!sample) { $("avviso").hidden = false; return; }
+  $("dialogo-nuova").showModal();
+};
+$("dialogo-nuova").addEventListener("close", () => {
+  if ($("dialogo-nuova").returnValue !== "ok") return;
+  const dati = Object.fromEntries([...new FormData($("form-nuova"))].map(([k, v]) => [k, String(v).slice(0, 2000)]));
+  $("form-nuova").reset();
+  const s = nuovaSessione(dati);
+  apri(s);
+  esegui(s);
+});
+$("riprendi").onclick = () => corrente && esegui(corrente);
+
+$("scrivi").onsubmit = (e) => {
+  e.preventDefault();
+  const testo = $("testo").value.trim().slice(0, 4000);
+  const s = corrente;
+  if (!testo || !s || s.esempio || !sample) return;
+  $("testo").value = "";
+  aggiungi(s, "tu", testo);
+  rispondiAlCapo(s, testo);
+};
+
+$("elimina").onclick = () => $("dialogo-elimina").showModal();
+$("dialogo-elimina").addEventListener("close", async () => {
+  const s = corrente;
+  if ($("dialogo-elimina").returnValue !== "ok" || !s || s.esempio) return;
+  sessioni.delete(s.id);
+  try { await archivio.elimina(s.id); } catch (e) { console.error(e); }
+  corrente = null;
+  const prossima = [...sessioni.values()][0];
+  if (prossima) apri(prossima); else { $("app").classList.remove("in-chat"); disegnaElenco(); }
+});
+$("indietro").onclick = () => $("app").classList.remove("in-chat");
+$("partecipanti-btn").onclick = () => $("dialogo-partecipanti").showModal();
+$("partecipanti").innerHTML = AGENTI.map((a) => `<li><div class="avatar">${a.avatar}</div><div><div class="nome" style="color:${a.colore}">${escape(a.nome)}</div><div class="sotto">${escape(a.ruolo)}</div></div></li>`).join("");
+
+// ---------- Avvio ----------
+(async () => {
+  const esempio = await creaEsempio();
+  apri(esempio);
+  $("app").classList.remove("in-chat");
+
+  sample = (await window.claude?.use("sample")) ?? null;
+  if (!sample) {
+    $("avviso").innerHTML = "Gli agenti lavorano solo quando apri questa pagina su <b>claude.ai</b>, collegata al tuo account. Intanto puoi guardare la chat di esempio.";
+    $("avviso").hidden = false;
+  }
+  archivio = await creaArchivio();
+  try {
+    for (const s of await archivio.tutte()) {
+      if (!s?.id || !Array.isArray(s.messaggi)) continue;
+      s.scrivendo = [];
+      if (s.stato === "in_corso") s.stato = "interrotta";
+      sessioni.set(s.id, s);
+    }
+  } catch (e) { console.error("Caricamento chat non riuscito", e); }
+  const mie = [...sessioni.values()].filter((s) => !s.esempio);
+  if (mie.length) {
+    mie.sort((a, b) => (b.messaggi.at(-1)?.ora ?? b.creata).localeCompare(a.messaggi.at(-1)?.ora ?? a.creata));
+    apri(mie[0]);
+    if (matchMedia("(max-width: 760px)").matches) $("app").classList.remove("in-chat");
+  }
+  aggiornaChat();
+  disegnaElenco();
+})();
+</script>
