@@ -1,0 +1,407 @@
+<!doctype html>
+<!-- su-misura -->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talluto Barberia · Barbiere a San Salvario, Torino</title>
+<meta name="description" content="Talluto Barberia, barbiere in Via Madama Cristina 114 a San Salvario, Torino. Taglio uomo, barba, rasatura con panno caldo. Chiama il +39 389 936 3908 per prenotare.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14291f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Talluto Barberia · San Salvario, Torino">
+<meta property="og:description" content="Taglio uomo, barba e rasatura con panno caldo in Via Madama Cristina 114.">
+<meta property="og:locale" content="it_IT">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314291f'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' text-anchor='middle' fill='%23c9a15a'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BarberShop",
+  "name": "Talluto Barberia",
+  "telephone": "+39 389 936 3908",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Via Madama Cristina 114",
+    "postalCode": "10126",
+    "addressLocality": "Torino",
+    "addressRegion": "TO",
+    "addressCountry": "IT"
+  },
+  "areaServed": "San Salvario, Torino",
+  "sameAs": ["https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y"],
+  "makesOffer": [
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Taglio uomo"}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Regolazione barba"}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Rasatura con panno caldo"}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Rasatura testa"}}
+  ]
+}
+</script>
+<style>
+:root {
+  --verde: #14291f;
+  --verde-2: #1d3a2d;
+  --ottone: #c9a15a;
+  --ottone-scuro: #8a6a2f;
+  --crema: #f5efe3;
+  --carta: #fbf8f2;
+  --inchiostro: #16120d;
+  --grigio: #5d5a52;
+  --rosso: #9e2f27;
+  --raggio: 18px;
+  --serif: "DM Serif Display", Georgia, "Times New Roman", serif;
+  --sans: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { margin: 0; font-family: var(--sans); color: var(--inchiostro); background: var(--carta); line-height: 1.65; font-size: 1.0625rem; -webkit-font-smoothing: antialiased; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--ottone); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+/* banner bozza */
+.bozza { background: #fff3cd; color: #5c4400; font-size: .82rem; text-align: center; padding: .55rem 16px; }
+
+/* header */
+header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--verde) 94%, transparent); backdrop-filter: blur(8px); color: var(--crema); border-bottom: 1px solid #ffffff14; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; }
+.logo { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+.logo-segno { width: 40px; height: 40px; border: 1.5px solid var(--ottone); border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); color: var(--ottone); font-size: 1.35rem; }
+.logo-testo { font-family: var(--serif); font-size: 1.4rem; letter-spacing: .01em; line-height: 1; }
+.logo-testo small { display: block; font-family: var(--sans); font-size: .62rem; letter-spacing: .32em; text-transform: uppercase; color: var(--ottone); margin-top: .3rem; }
+.menu { display: flex; align-items: center; gap: 1.75rem; list-style: none; margin: 0; padding: 0; font-size: .95rem; font-weight: 500; }
+.menu a { text-decoration: none; opacity: .82; transition: opacity .2s, color .2s; }
+.menu a:hover { opacity: 1; color: var(--ottone); }
+
+/* pulsanti */
+.btn { display: inline-flex; align-items: center; gap: .6rem; padding: .95rem 1.5rem; border-radius: 999px; font-weight: 700; font-size: .98rem; text-decoration: none; border: 1.5px solid transparent; transition: transform .2s, background .2s, color .2s, border-color .2s; }
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btn:hover { transform: translateY(-2px); }
+.btn-ottone { background: var(--ottone); color: var(--verde); }
+.btn-ottone:hover { background: #d8b36f; }
+.btn-linea { border-color: #f5efe366; color: var(--crema); }
+.btn-linea:hover { border-color: var(--ottone); color: var(--ottone); }
+.btn-piccolo { padding: .6rem 1.1rem; font-size: .9rem; }
+
+/* hero */
+.hero { position: relative; overflow: hidden; background: radial-gradient(120% 90% at 85% 10%, var(--verde-2) 0%, var(--verde) 55%, #0d1c15 100%); color: var(--crema); padding: clamp(72px, 11vw, 132px) 0 clamp(64px, 9vw, 112px); }
+.hero-griglia { display: grid; grid-template-columns: 1.25fr .75fr; gap: 3rem; align-items: center; }
+.etichetta { display: inline-flex; align-items: center; gap: .6rem; font-size: .78rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--ottone); margin: 0 0 1.25rem; }
+.etichetta::before { content: ""; width: 28px; height: 1.5px; background: currentColor; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; margin: 0; }
+h1 { font-size: clamp(2.7rem, 7.2vw, 5.4rem); letter-spacing: -.01em; }
+h1 em { font-style: italic; color: var(--ottone); }
+.hero p.lead { font-size: clamp(1.05rem, 1.6vw, 1.22rem); max-width: 34rem; color: #f5efe3d9; margin: 1.5rem 0 2.25rem; }
+.azioni { display: flex; flex-wrap: wrap; gap: .8rem; }
+.emblema { justify-self: end; width: min(100%, 340px); aspect-ratio: 1; }
+.emblema svg { width: 100%; height: 100%; }
+
+/* striscia info */
+.striscia { background: var(--crema); border-bottom: 1px solid #e6dcc8; }
+.striscia ul { display: grid; grid-template-columns: repeat(3, 1fr); list-style: none; margin: 0; padding: 0; }
+.striscia li { display: flex; align-items: center; gap: .9rem; padding: 1.4rem 1rem; font-weight: 600; font-size: .98rem; }
+.striscia li + li { border-left: 1px solid #e0d4bd; }
+.striscia svg { width: 26px; height: 26px; color: var(--ottone-scuro); flex: none; }
+.striscia span { display: block; font-weight: 500; font-size: .82rem; color: var(--grigio); }
+
+/* sezioni */
+section { padding: clamp(72px, 9vw, 120px) 0; }
+.intestazione { max-width: 40rem; margin-bottom: 3rem; }
+.intestazione .etichetta { color: var(--ottone-scuro); }
+h2 { font-size: clamp(2.1rem, 4.6vw, 3.4rem); color: var(--verde); }
+.intestazione p { color: var(--grigio); margin: 1rem 0 0; font-size: 1.08rem; }
+
+/* servizi */
+.servizi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+.servizio { position: relative; background: #fff; border: 1px solid #ece4d4; border-radius: var(--raggio); padding: 2rem 2rem 1.9rem; transition: border-color .25s, transform .25s, box-shadow .25s; }
+.servizio:hover { border-color: var(--ottone); transform: translateY(-3px); box-shadow: 0 18px 40px -24px #14291f55; }
+.servizio .icona { width: 52px; height: 52px; border-radius: 14px; background: var(--verde); color: var(--ottone); display: grid; place-items: center; margin-bottom: 1.3rem; }
+.servizio .icona svg { width: 26px; height: 26px; }
+.servizio h3 { font-size: 1.7rem; color: var(--verde); margin-bottom: .6rem; }
+.servizio p { margin: 0; color: var(--grigio); }
+.nota { margin-top: 1.75rem; font-size: .92rem; color: var(--grigio); display: flex; gap: .6rem; align-items: center; }
+.nota svg { width: 18px; height: 18px; color: var(--ottone-scuro); flex: none; }
+
+/* come funziona */
+.scuro { background: var(--verde); color: var(--crema); }
+.scuro h2 { color: var(--crema); }
+.scuro .intestazione p { color: #f5efe3b3; }
+.scuro .intestazione .etichetta { color: var(--ottone); }
+.passi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; counter-reset: passo; }
+.passo { border-top: 1.5px solid #c9a15a80; padding-top: 1.6rem; }
+.passo::before { counter-increment: passo; content: "0" counter(passo); font-family: var(--serif); font-size: 2.6rem; color: var(--ottone); display: block; line-height: 1; margin-bottom: 1rem; }
+.passo h3 { font-size: 1.55rem; margin-bottom: .5rem; }
+.passo p { margin: 0; color: #f5efe3c4; }
+
+/* galleria */
+.galleria { display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: 220px 220px; gap: 1rem; }
+.foto { border-radius: var(--raggio); background: repeating-linear-gradient(135deg, #efe7d8 0 14px, #f6f0e5 14px 28px); border: 1.5px dashed #cdbd9c; display: grid; place-items: center; text-align: center; color: var(--ottone-scuro); font-size: .9rem; font-weight: 600; padding: 1rem; }
+.foto svg { width: 34px; height: 34px; margin: 0 auto .5rem; }
+.foto:first-child { grid-row: span 2; }
+
+/* dove siamo */
+.dove { display: grid; grid-template-columns: 1fr 1.15fr; gap: 2.5rem; align-items: stretch; }
+.scheda { background: #fff; border: 1px solid #ece4d4; border-radius: var(--raggio); padding: 2.25rem; display: flex; flex-direction: column; gap: 1.5rem; }
+.riga { display: grid; grid-template-columns: 44px 1fr; gap: 1rem; align-items: start; }
+.riga .icona { width: 44px; height: 44px; border-radius: 12px; background: var(--crema); color: var(--ottone-scuro); display: grid; place-items: center; }
+.riga .icona svg { width: 22px; height: 22px; }
+.riga strong { display: block; font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--grigio); margin-bottom: .2rem; }
+.riga a { font-weight: 700; text-decoration-color: var(--ottone); text-underline-offset: 4px; }
+.scheda .azioni { margin-top: auto; }
+.scheda .btn-linea { color: var(--verde); border-color: #14291f40; }
+.scheda .btn-linea:hover { border-color: var(--ottone-scuro); color: var(--ottone-scuro); }
+.mappa { width: 100%; height: 100%; min-height: 380px; border: 0; border-radius: var(--raggio); background: #e9e2d3; }
+
+/* chiusura */
+.finale { text-align: center; background: var(--crema); }
+.finale h2 { max-width: 18ch; margin-inline: auto; }
+.finale p { color: var(--grigio); max-width: 34rem; margin: 1.1rem auto 2rem; }
+.finale .azioni { justify-content: center; }
+.finale .btn-linea { color: var(--verde); border-color: #14291f40; }
+
+/* footer */
+footer { background: #0d1c15; color: #f5efe399; font-size: .9rem; padding: 2.5rem 0 6rem; }
+.piede { display: flex; flex-wrap: wrap; gap: 1rem 2rem; justify-content: space-between; align-items: center; }
+footer a { color: var(--ottone); text-decoration: none; }
+
+/* barra mobile */
+.barra-mobile { display: none; }
+
+/* palo da barbiere */
+.palo { height: 8px; background: repeating-linear-gradient(-45deg, var(--rosso) 0 12px, var(--crema) 12px 24px, var(--verde-2) 24px 36px, var(--crema) 36px 48px); }
+
+@media (max-width: 900px) {
+  .hero-griglia { grid-template-columns: 1fr; }
+  .emblema { display: none; }
+  .servizi, .passi { grid-template-columns: 1fr; }
+  .dove { grid-template-columns: 1fr; }
+  .mappa { min-height: 300px; }
+  .galleria { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 160px 160px; }
+  .foto:first-child { grid-column: span 2; grid-row: auto; }
+}
+@media (max-width: 720px) {
+  .menu li:not(:last-child) { display: none; }
+  .striscia ul { grid-template-columns: 1fr; }
+  .striscia li + li { border-left: 0; border-top: 1px solid #e0d4bd; }
+  .servizio { padding: 1.6rem; }
+  .scheda { padding: 1.6rem; }
+  .barra-mobile { display: flex; position: fixed; inset: auto 0 0 0; z-index: 30; gap: .6rem; padding: .7rem 16px calc(.7rem + env(safe-area-inset-bottom)); background: var(--verde); border-top: 1px solid #ffffff1f; }
+  .barra-mobile .btn { flex: 1; justify-content: center; padding: .85rem 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="bozza">Bozza dimostrativa non ufficiale, preparata come proposta per Talluto Barberia. Testi e dati da confermare con il titolare.</div>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#" aria-label="Talluto Barberia, inizio pagina">
+      <span class="logo-segno" aria-hidden="true">T</span>
+      <span class="logo-testo">Talluto<small>Barberia</small></span>
+    </a>
+    <ul class="menu">
+      <li><a href="#servizi">Servizi</a></li>
+      <li><a href="#come-funziona">Come funziona</a></li>
+      <li><a href="#dove-siamo">Dove siamo</a></li>
+      <li><a class="btn btn-ottone btn-piccolo" href="tel:+393899363908">Chiama</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="titolo">
+    <div class="wrap hero-griglia">
+      <div>
+        <p class="etichetta">Barbiere · San Salvario, Torino</p>
+        <h1 id="titolo">Taglio, barba e <em>rasatura</em> come si deve.</h1>
+        <p class="lead">In Via Madama Cristina, nel cuore di San Salvario: una barberia dove sederti, rilassarti e uscire in ordine. Chiama o prenota online il tuo appuntamento.</p>
+        <div class="azioni">
+          <a class="btn btn-ottone" href="tel:+393899363908">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+            Chiama 389 936 3908
+          </a>
+          <a class="btn btn-linea" href="https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Prenota su Fresha
+          </a>
+        </div>
+      </div>
+      <div class="emblema" aria-hidden="true">
+        <svg viewBox="0 0 320 320" fill="none">
+          <circle cx="160" cy="160" r="150" stroke="#c9a15a" stroke-width="1.5"/>
+          <circle cx="160" cy="160" r="136" stroke="#c9a15a" stroke-opacity=".35" stroke-width="1"/>
+          <path id="arco" d="M60 160a100 100 0 0 1 200 0" />
+          <text font-family="Manrope, sans-serif" font-size="13" font-weight="700" letter-spacing="6" fill="#c9a15a"><textPath href="#arco" startOffset="50%" text-anchor="middle">TALLUTO · BARBERIA</textPath></text>
+          <text x="160" y="250" font-family="Manrope, sans-serif" font-size="11" font-weight="700" letter-spacing="5" fill="#c9a15a" fill-opacity=".8" text-anchor="middle">SAN SALVARIO · TORINO</text>
+          <g transform="translate(160 172) rotate(-35)">
+            <rect x="-86" y="-9" width="96" height="18" rx="9" fill="#f5efe3"/>
+            <path d="M10 -9h66a10 10 0 0 1 10 10v0a8 8 0 0 1-8 8H10z" fill="#c9a15a"/>
+            <circle cx="-74" cy="0" r="4" fill="#14291f"/>
+          </g>
+          <g transform="translate(160 172) rotate(35)" opacity=".9">
+            <circle cx="-62" cy="0" r="12" stroke="#f5efe3" stroke-width="4"/>
+            <circle cx="-62" cy="22" r="0" />
+            <path d="M-50 -2 L70 -6 L70 2 L-50 4 Z" fill="#f5efe3"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+  <div class="palo" aria-hidden="true"></div>
+
+  <div class="striscia">
+    <ul class="wrap">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-8-6.2-8-12a8 8 0 0 1 16 0c0 5.8-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div>Via Madama Cristina 114<span>San Salvario, 10126 Torino</span></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 15h3"/></svg>
+        <div>Su appuntamento<span>Al telefono o su Fresha</span></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+        <div><a href="tel:+393899363908" style="text-decoration:none">+39 389 936 3908</a><span>Chiama per orari e disponibilità</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <section id="servizi" aria-labelledby="titolo-servizi">
+    <div class="wrap">
+      <div class="intestazione">
+        <p class="etichetta">I servizi</p>
+        <h2 id="titolo-servizi">Quello che serve, fatto bene.</h2>
+        <p>Pochi servizi, tutti dedicati all'uomo: dal taglio di tutti i giorni alla rasatura tradizionale.</p>
+      </div>
+      <div class="servizi">
+        <article class="servizio">
+          <div class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg></div>
+          <h3>Taglio uomo</h3>
+          <p>Forbici e macchinetta, classico o moderno: si parte da come porti i capelli e da quanto tempo vuoi dedicarci ogni mattina.</p>
+        </article>
+        <article class="servizio">
+          <div class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8c0 7 2.5 12 6 12s6-5 6-12"/><path d="M6 8c1.5 1 3.5 1.5 6 1.5S16.5 9 18 8"/><path d="M10 14h4"/></svg></div>
+          <h3>Regolazione barba</h3>
+          <p>Contorni puliti, lunghezza uniforme e una forma che segue il viso, che la barba sia corta o importante.</p>
+        </article>
+        <article class="servizio">
+          <div class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15h12l4-4"/><path d="M3 15v-2.5A1.5 1.5 0 0 1 4.5 11H15"/><path d="M15 11V9"/><path d="M7 19c0-1 .5-2 1-2.5M11 19c0-1 .5-2 1-2.5"/></svg></div>
+          <h3>Rasatura con panno caldo</h3>
+          <p>Il rito tradizionale: panno caldo per ammorbidire, schiuma, rasoio e una lozione per chiudere. Pelle liscia e tempo per te.</p>
+        </article>
+        <article class="servizio">
+          <div class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a7 7 0 0 0-7 7v3a7 7 0 0 0 14 0v-3a7 7 0 0 0-7-7z"/><path d="M5 11h14"/></svg></div>
+          <h3>Rasatura testa</h3>
+          <p>Per chi porta la testa rasata: una finitura precisa e uniforme, senza irritazioni.</p>
+        </article>
+      </div>
+      <p class="nota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Prezzi e durata di ogni servizio: chiedi in barberia o consulta la pagina di prenotazione.</p>
+    </div>
+  </section>
+
+  <section id="come-funziona" class="scuro" aria-labelledby="titolo-come">
+    <div class="wrap">
+      <div class="intestazione">
+        <p class="etichetta">Come funziona</p>
+        <h2 id="titolo-come">Prenoti, ti siedi, esci in ordine.</h2>
+        <p>Niente attese inutili: scegli tu il momento.</p>
+      </div>
+      <div class="passi">
+        <div class="passo">
+          <h3>Prenota</h3>
+          <p>Chiama il 389 936 3908 oppure scegli giorno e ora sulla pagina Fresha della barberia.</p>
+        </div>
+        <div class="passo">
+          <h3>Racconta</h3>
+          <p>Due parole su cosa vuoi ottenere: taglio, barba o entrambi. Se non lo sai, troviamo insieme lo stile adatto.</p>
+        </div>
+        <div class="passo">
+          <h3>Rilassati</h3>
+          <p>Il resto lo facciamo noi, con calma e attenzione ai dettagli, fino alla rifinitura finale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="galleria" aria-labelledby="titolo-galleria">
+    <div class="wrap">
+      <div class="intestazione">
+        <p class="etichetta">La barberia</p>
+        <h2 id="titolo-galleria">Passa a trovarci.</h2>
+        <p>Uno sguardo al salone e ai lavori.</p>
+      </div>
+      <div class="galleria">
+        <div class="foto"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Foto del salone<br>(da fornire)</div></div>
+        <div class="foto"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Un taglio</div></div>
+        <div class="foto"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Una barba</div></div>
+        <div class="foto"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>La postazione</div></div>
+        <div class="foto"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>L'ingresso</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dove-siamo" style="padding-top:0" aria-labelledby="titolo-dove">
+    <div class="wrap">
+      <div class="intestazione">
+        <p class="etichetta">Dove siamo</p>
+        <h2 id="titolo-dove">A San Salvario, in Via Madama Cristina.</h2>
+      </div>
+      <div class="dove">
+        <div class="scheda">
+          <div class="riga">
+            <span class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s-8-6.2-8-12a8 8 0 0 1 16 0c0 5.8-8 12-8 12z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <div><strong>Indirizzo</strong>Via Madama Cristina 114<br>10126 Torino (TO)</div>
+          </div>
+          <div class="riga">
+            <span class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>
+            <div><strong>Telefono</strong><a href="tel:+393899363908">+39 389 936 3908</a></div>
+          </div>
+          <div class="riga">
+            <span class="icona"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+            <div><strong>Orari</strong>Chiama o controlla le disponibilità su Fresha.</div>
+          </div>
+          <div class="azioni">
+            <a class="btn btn-ottone" href="https://www.google.com/maps/search/?api=1&amp;query=Talluto%20Barberia%2C%20Via%20Madama%20Cristina%20114%2C%2010126%20Torino" target="_blank" rel="noopener">Indicazioni stradali</a>
+            <a class="btn btn-linea" href="https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y" target="_blank" rel="noopener">Prenota su Fresha</a>
+          </div>
+        </div>
+        <iframe class="mappa" title="Mappa: Talluto Barberia, Via Madama Cristina 114, Torino" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Via%20Madama%20Cristina%20114%2C%2010126%20Torino&amp;output=embed"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="finale" aria-labelledby="titolo-finale">
+    <div class="wrap">
+      <h2 id="titolo-finale">È ora di sistemare taglio e barba?</h2>
+      <p>Prenota il tuo posto in poltrona: una telefonata o pochi clic su Fresha.</p>
+      <div class="azioni">
+        <a class="btn btn-ottone" href="tel:+393899363908">Chiama 389 936 3908</a>
+        <a class="btn btn-linea" href="https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y" target="_blank" rel="noopener">Prenota online</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap piede">
+    <span>© Talluto Barberia · Via Madama Cristina 114, 10126 Torino</span>
+    <span><a href="tel:+393899363908">+39 389 936 3908</a> · <a href="https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y" target="_blank" rel="noopener">Fresha</a></span>
+  </div>
+</footer>
+
+<nav class="barra-mobile" aria-label="Azioni rapide">
+  <a class="btn btn-ottone" href="tel:+393899363908">Chiama</a>
+  <a class="btn btn-linea" href="https://www.fresha.com/lvp/talluto-barberia-via-madama-cristina-torino-alEJ4Y" target="_blank" rel="noopener">Prenota</a>
+</nav>
+
+</body>
+</html>
