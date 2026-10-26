@@ -24,4 +24,4 @@ Flusso in due fasi, eseguibile da Claude Code in questo repository.
 `leads/torino.json`: 6 attività di Torino (1 barberia, 4 sartorie di riparazione, 1 calzolaio), ciascuna con il registro dei controlli in `verifiche` e un `livello_certezza`; 9 candidati scartati con il motivo. Siti in `siti/torino/`; `talluto-barberia` è il primo sito su misura.
 
 ## Importante
-I siti sono **bozze di proposta**: hanno un banner "non ufficiale" e `noindex`. Prima di pubblicarli serve il consenso del titolare, la conferma dei dati (telefono, orari, servizi) e, dove possibile, foto e logo reali.
+I siti sono **bozze di proposta**: hanno un banner "non ufficiale" e `noindex`. Prima di pubblicarli serve l'autorizzazione scritta del titolare: checklist e messaggio da inviare sono in [`docs/autorizzazione-titolare.md`](docs/autorizzazione-titolare.md).

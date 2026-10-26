@@ -35,3 +35,6 @@ Banner bozza → header con logo testuale e pulsante principale → hero con tit
 - Verifica che ogni `tel:` e link esterno corrisponda ai dati del lead.
 - Rileggi ogni frase cercando affermazioni non supportate dalle fonti.
 - **Fermati e chiedi all'utente di controllare** prima di fare altri siti o di pubblicare.
+
+## 7. Pubblicazione
+Solo dopo l'autorizzazione scritta del titolare: segui `docs/autorizzazione-titolare.md` (checklist, P.IVA, privacy, dominio intestato al titolare). Senza autorizzazione il sito resta bozza con banner e `noindex`.

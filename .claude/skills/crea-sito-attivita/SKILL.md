@@ -30,4 +30,5 @@ Preset di settore disponibili (palette, testi, servizi tipici): `barbiere`, `par
 - **Mai inventare fatti** (telefono, orari, prezzi, recensioni, anni di attività). Se mancano, il template mostra un testo neutro ("Su richiesta").
 - I servizi di settore generici sono marcati come "indicativi, da confermare".
 - I siti sono **proposte**: restano con il banner "bozza non ufficiale" e `noindex` finché il titolare non li approva. Non pubblicarli online a nome dell'attività senza il suo consenso; per mostrarli al titolare usa i file locali o un link privato.
+- Checklist e messaggio di autorizzazione: `docs/autorizzazione-titolare.md`.
 - Dopo l'approvazione: rimuovi il banner e il `noindex`, aggiungi logo/foto forniti dal titolare, poi pubblica (es. GitHub Pages, Netlify) sul dominio scelto dal titolare.
