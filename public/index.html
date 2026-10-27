@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenzia Idee</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Elenco chat -->
+    <aside class="sidebar">
+      <header class="barra">
+        <div class="avatar grande">💸</div>
+        <div class="titolo-barra">Agenzia Idee</div>
+        <button id="nuova" class="icona" title="Nuova sessione">＋</button>
+      </header>
+      <div id="avviso-demo" class="avviso" hidden>Modalità demo: risposte simulate. Imposta <code>ANTHROPIC_API_KEY</code> per usare Claude.</div>
+      <ul id="elenco" class="elenco"></ul>
+      <div id="vuoto" class="vuoto">Nessuna chat ancora.<br>Premi <b>＋</b> per far lavorare il team.</div>
+    </aside>
+
+    <!-- Chat -->
+    <main class="chat" id="chat">
+      <header class="barra">
+        <button id="indietro" class="icona indietro" title="Indietro">←</button>
+        <div class="avatar grande">💸</div>
+        <div class="info-chat">
+          <div id="titolo-chat" class="titolo-barra">Agenzia Idee</div>
+          <div id="sotto-titolo" class="sotto"></div>
+        </div>
+        <button id="partecipanti-btn" class="icona" title="Partecipanti">👥</button>
+        <button id="elimina" class="icona" title="Elimina chat" hidden>🗑️</button>
+      </header>
+      <section id="messaggi" class="messaggi">
+        <div class="benvenuto">
+          <h2>💬 Il tuo team è pronto</h2>
+          <p>12 agenti AI inventano, controllano e mettono in pratica idee per farti guadagnare qualcosa senza impegnarti troppo.</p>
+          <button class="primario" onclick="document.getElementById('nuova').click()">Avvia una sessione</button>
+        </div>
+      </section>
+      <form id="scrivi" class="scrivi" hidden>
+        <input id="testo" autocomplete="off" placeholder="Scrivi un messaggio… (usa @Nome per chiedere a qualcuno)">
+        <button class="invia" title="Invia">➤</button>
+      </form>
+    </main>
+  </div>
+
+  <!-- Nuova sessione -->
+  <dialog id="dialogo-nuova">
+    <form method="dialog" id="form-nuova">
+      <h3>Nuova sessione</h3>
+      <p class="sotto">Più dettagli dai, più le idee saranno su misura.</p>
+      <label>Nome della chat <input name="titolo" placeholder="es. Idee di ottobre"></label>
+      <div class="riga">
+        <label>Ore a settimana <input name="ore" type="number" min="0" step="0.5" placeholder="3"></label>
+        <label>Budget iniziale (€) <input name="budget" type="number" min="0" placeholder="100"></label>
+      </div>
+      <label>Cosa sai fare <textarea name="competenze" rows="2" placeholder="es. so usare Excel, cucino bene, parlo inglese"></textarea></label>
+      <label>Cosa possiedi / risorse <textarea name="risorse" rows="2" placeholder="es. una cantina libera, una reflex, una bici"></textarea></label>
+      <label>Altre note <textarea name="note" rows="2" placeholder="es. vivo a Bologna, niente cose online con la mia faccia"></textarea></label>
+      <div class="azioni">
+        <button value="annulla" formnovalidate>Annulla</button>
+        <button value="ok" class="primario">Avvia il team 🚀</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Partecipanti -->
+  <dialog id="dialogo-partecipanti">
+    <form method="dialog">
+      <h3>Partecipanti</h3>
+      <p id="modello" class="sotto"></p>
+      <ul id="partecipanti" class="partecipanti"></ul>
+      <div class="azioni"><button class="primario">Chiudi</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
