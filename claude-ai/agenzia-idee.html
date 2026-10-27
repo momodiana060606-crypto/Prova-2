@@ -62,6 +62,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px
 .elenco .anteprima { color: var(--testo-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .etichetta { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bordo); color: var(--testo-2); margin-left: 6px; vertical-align: 1px; }
 .avviso { background: var(--avviso); padding: 10px 16px; font-size: 13px; line-height: 1.45; }
+.consumo { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-bottom: 1px solid var(--bordo); font-size: 12.5px; color: var(--testo-2); }
+.consumo .misura { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.consumo .linea { height: 4px; border-radius: 2px; background: var(--bordo); overflow: hidden; }
+.consumo .pieno { height: 100%; background: var(--verde); }
+.consumo.esaurito .pieno { background: var(--pericolo); }
+.consumo.esaurito .testo-consumo { color: var(--pericolo); }
+.consumo .testo-consumo { font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .chat { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .messaggi {
@@ -148,6 +155,10 @@ summary + .compito { margin-top: 4px; border-top: 0; padding-top: 0; }
       <button id="nuova" class="icona" title="Nuova sessione" aria-label="Nuova sessione">＋</button>
     </header>
     <div id="avviso" class="avviso" hidden></div>
+    <div id="consumo" class="consumo" hidden>
+      <div class="misura"><span id="testo-consumo" class="testo-consumo"></span><div class="linea"><div id="pieno" class="pieno" style="width:0"></div></div></div>
+      <button id="modifica-limite" class="copia" type="button">Modifica</button>
+    </div>
     <ul id="elenco" class="elenco"></ul>
   </aside>
 
@@ -198,6 +209,18 @@ summary + .compito { margin-top: 4px; border-top: 0; padding-top: 0; }
     <h3 id="titolo-partecipanti">Partecipanti</h3>
     <ul id="partecipanti" class="partecipanti"></ul>
     <div class="azioni"><button class="primario">Chiudi</button></div>
+  </form>
+</dialog>
+
+<dialog id="dialogo-limite">
+  <form method="dialog" id="form-limite">
+    <h3>Limite di utilizzo</h3>
+    <p class="sotto" style="white-space:normal">Gli agenti si fermano quando arrivano a questo numero di richieste a Claude. Il conteggio si azzera 5 ore dopo la prima richiesta. Una sessione completa ne usa circa 30–45, riprendere il team operativo circa 10–15.</p>
+    <label>Richieste ogni 5 ore <input id="f-tetto" name="tetto" type="number" min="1" max="1000" step="1" required></label>
+    <div class="azioni">
+      <button value="annulla" class="btn" formnovalidate>Annulla</button>
+      <button value="ok" class="primario">Salva</button>
+    </div>
   </form>
 </dialog>
 
@@ -313,11 +336,44 @@ const ERRORI = {
   prompt_too_large: "La conversazione è diventata troppo lunga per un agente.",
   upstream_error: "Problema di connessione con Claude. Premi Riprendi per riprovare.",
 };
-const messaggioErrore = (e) => ERRORI[e?.code] ?? (e?.message ? `Errore: ${e.message}` : ERRORI.upstream_error);
+ERRORI.limite_utilizzo = () => `⏸️ Raggiunto il limite di ${limite.tetto} richieste ogni 5 ore: il team si ferma qui. Potrai premere Riprendi dopo le ${ora(fineFinestra().toISOString())}, oppure alzare il limite in alto a sinistra.`;
+const messaggioErrore = (e) => (typeof ERRORI[e?.code] === "function" ? ERRORI[e.code]() : ERRORI[e?.code]) ?? (e?.message ? `Errore: ${e.message}` : ERRORI.upstream_error);
+
+// ---------- Limite di utilizzo: al massimo `tetto` richieste ogni 5 ore ----------
+const FINESTRA_ORE = 5;
+const limite = { tetto: 20, usate: 0, inizio: null };
+const fineFinestra = () => new Date(new Date(limite.inizio).getTime() + FINESTRA_ORE * 3600_000);
+function aggiornaFinestra() {
+  if (limite.inizio && Date.now() >= fineFinestra().getTime()) { limite.usate = 0; limite.inizio = null; }
+}
+function usaRichiesta() {
+  aggiornaFinestra();
+  if (limite.usate >= limite.tetto) throw { code: "limite_utilizzo" };
+  limite.inizio ??= new Date().toISOString();
+  limite.usate++;
+  salvaLimite();
+  mostraConsumo();
+}
+let salvataggioLimite = Promise.resolve();
+function salvaLimite() {
+  const copia = { ...limite };
+  salvataggioLimite = salvataggioLimite.then(() => archivio?.salvaImpostazioni({ limite: copia })).catch((e) => console.error("Limite non salvato", e));
+}
+function mostraConsumo() {
+  aggiornaFinestra();
+  const box = $("consumo");
+  box.hidden = !sample;
+  const esaurito = limite.usate >= limite.tetto;
+  box.classList.toggle("esaurito", esaurito);
+  $("pieno").style.width = `${Math.min(100, (limite.usate / limite.tetto) * 100)}%`;
+  $("testo-consumo").textContent = `${limite.usate}/${limite.tetto} richieste` +
+    (limite.inizio ? ` · si azzera alle ${ora(fineFinestra().toISOString())}` : " ogni 5 ore");
+}
 
 async function chiedi(s, idAgente, formato, contenuto) {
   if (s.esempio) return rispostaEsempio(idAgente, formato, contenuto);
   if (!sample) throw { code: "sampling_disabled" };
+  usaRichiesta();
   const prompt = `${AG[idAgente].system}\n\n${contenuto}\n\nRispondi SOLO con un oggetto JSON valido, senza altro testo, con esattamente questa struttura:\n${FORMATI[formato]}`;
   const out = await sample.json(prompt, { modelTier: LIVELLO[formato] ?? "default" });
   if (!out || typeof (out.messaggio_chat ?? out.messaggio_team) !== "string") throw { code: "invalid_json" };
@@ -332,6 +388,8 @@ function creaArchivioLocale() {
     tutte: async () => Object.values(leggi()),
     salva: async (s) => { const t = leggi(); t[s.id] = s; scrivi(t); },
     elimina: async (id) => { const t = leggi(); delete t[id]; scrivi(t); },
+    leggiImpostazioni: async () => { try { return JSON.parse(localStorage.getItem(CHIAVE + "-impostazioni")); } catch { return null; } },
+    salvaImpostazioni: async (x) => { try { localStorage.setItem(CHIAVE + "-impostazioni", JSON.stringify(x)); } catch {} },
   };
 }
 
@@ -362,7 +420,7 @@ function creaArchivioDb(chats) {
       const docs = new Map((await chats.get()).docs.map((d) => [d.id, d.data()]));
       const sessioni = [];
       for (const [id, d] of docs) {
-        if (id.includes(".")) continue;
+        if (id.includes(".") || id === "impostazioni") continue;
         if (d.formato !== 2) { sessioni.push(JSON.parse(JSON.stringify(d))); continue; } // vecchio formato, un solo documento
         try {
           const parti = Object.fromEntries(Object.entries(d.parti).map(([parte, n]) => {
@@ -405,6 +463,11 @@ function creaArchivioDb(chats) {
         for (const id of prima) if (!ora.has(id)) { await chats.doc(id).delete(); scritti.delete(id); }
       }
     },
+    leggiImpostazioni: async () => {
+      const d = await chats.doc("impostazioni").get();
+      return d.exists ? d.data() : null;
+    },
+    salvaImpostazioni: (x) => chats.doc("impostazioni").set(x),
     async elimina(id) {
       const indice = scritti.get(id);
       await chats.doc(id).delete();
@@ -745,7 +808,7 @@ async function esegui(s) {
     s.stato = "completata";
   } catch (e) {
     console.error(e);
-    sistema(s, `⚠️ ${messaggioErrore(e)}`, s.fase >= FASE_OPERATIVA ? "operativo" : "strategia");
+    sistema(s, e?.code === "limite_utilizzo" ? messaggioErrore(e) : `⚠️ ${messaggioErrore(e)}`, s.fase >= FASE_OPERATIVA ? "operativo" : "strategia");
     s.stato = "errore";
   } finally {
     s.scrivendo = {};
@@ -1047,6 +1110,15 @@ $("dialogo-nuova").addEventListener("close", () => {
   apri(s);
   esegui(s);
 });
+$("modifica-limite").onclick = () => { $("f-tetto").value = limite.tetto; $("dialogo-limite").showModal(); };
+$("dialogo-limite").addEventListener("close", () => {
+  if ($("dialogo-limite").returnValue !== "ok") return;
+  const n = Math.round(Number($("f-tetto").value));
+  if (!(n >= 1)) return;
+  limite.tetto = Math.min(n, 1000);
+  salvaLimite();
+  mostraConsumo();
+});
 $("riprendi").onclick = () => corrente && esegui(corrente.s);
 
 $("scrivi").onsubmit = (e) => {
@@ -1108,6 +1180,12 @@ $("partecipanti-btn").onclick = () => {
     $("avviso").hidden = false;
   }
   archivio = await creaArchivio();
+  try {
+    const salvato = (await archivio.leggiImpostazioni())?.limite;
+    if (salvato) Object.assign(limite, { tetto: Number(salvato.tetto) || limite.tetto, usate: Number(salvato.usate) || 0, inizio: salvato.inizio ?? null });
+  } catch (e) { console.error("Impostazioni non lette", e); }
+  mostraConsumo();
+  setInterval(mostraConsumo, 60_000);
   try {
     for (const s of await archivio.tutte()) {
       if (!s?.id || !Array.isArray(s.messaggi)) continue;
