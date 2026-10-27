@@ -285,7 +285,7 @@ const FORMATI = {
   ordini: `{"messaggio_chat": string, "compiti": [{"idea": string (ID dell'idea, es. "I1"), "agente": string (uno degli ID del team operativo), "titolo": string (breve), "istruzioni": string (cosa deve consegnare esattamente)}]}`,
   esecuzione: `{"messaggio_chat": string, "risultati": [{"id": string (ID del compito, es. "C1"), "esito": "fatto" | "serve_il_capo" | "impossibile", "consegna": string (il lavoro completo e pronto da usare), "serve_dal_capo": [string] (azioni, informazioni o decisioni che solo il capo può dare; [] se nulla)}]}`,
   controllo_op: `{"messaggio_chat": string, "problemi": [{"id_compito": string, "gravita": "alta" | "media" | "bassa", "problema": string, "soluzione": string}]}`,
-  rapporto: `{"messaggio_team": string (messaggio per il team operativo che chiude il giro di lavoro), "messaggio_chat": string (messaggio privato per il capo: tono diretto, cosa è pronto e cosa gli serve, max 6 frasi), "punti": [{"tipo": "da_fare" | "decisione" | "informazione" | "impossibile", "testo": string (concreto, una cosa sola), "compiti": [string] (ID dei compiti collegati)}]}`,
+  rapporto: `{"messaggio_team": string (messaggio per il team operativo che chiude il giro di lavoro), "messaggio_chat": string (messaggio privato per il capo: tono diretto, cosa è pronto e cosa gli serve, max 6 frasi), "punti": [{"tipo": "da_fare" | "decisione" | "informazione" | "impossibile", "testo": string (concreto, una cosa sola), "compiti": [string] (ID dei compiti collegati)}], "agenti_richiesti": [{"nome": string, "ruolo": string, "cosa_farebbe": string, "perche_serve": string (quali compiti sbloccherebbe)}] ([] se il team attuale basta)}`,
   privata: `{"messaggio_chat": string, "inoltra_al_team": [{"id_compito": string, "istruzioni": string (cosa rifare o completare, con le informazioni date dal capo)}] ([] se non c'è niente da far rifare)}`,
   messaggio: `{"messaggio_chat": string}`,
 };
@@ -340,15 +340,78 @@ async function creaArchivio() {
     const [db, user] = await Promise.all([window.claude?.use("db"), window.claude?.use("user")]);
     const uid = db && user ? await user.id() : null;
     if (!uid) return creaArchivioLocale();
-    const chats = db.collection("data/users/" + uid);
-    return {
-      tutte: async () => (await chats.get()).docs.map((d) => JSON.parse(JSON.stringify(d.data()))),
-      salva: (s) => chats.doc(s.id).set(s),
-      elimina: (id) => chats.doc(id).delete(),
-    };
+    return creaArchivioDb(db.collection("data/users/" + uid));
   } catch {
     return creaArchivioLocale();
   }
+}
+
+// Ogni documento del database può pesare al massimo 256 KB, quindi una sessione viene divisa:
+// un documento indice (id della sessione) e tanti pezzi "<id>.<parte>.<n>" con il testo JSON.
+// Si riscrivono solo i pezzi cambiati dall'ultimo salvataggio.
+const PEZZO = 150_000;
+function dividiSessione(s) {
+  const { messaggi, op, priv, ...meta } = s;
+  return { meta, strategia: messaggi, operativo: op.messaggi, compiti: op.compiti, privata: priv.messaggi };
+}
+function creaArchivioDb(chats) {
+  const scritti = new Map(); // id documento -> testo già salvato
+  const pezziDi = (id, indice) => Object.entries(indice.parti).flatMap(([parte, n]) => Array.from({ length: n }, (_, k) => `${id}.${parte}.${k}`));
+  return {
+    async tutte() {
+      const docs = new Map((await chats.get()).docs.map((d) => [d.id, d.data()]));
+      const sessioni = [];
+      for (const [id, d] of docs) {
+        if (id.includes(".")) continue;
+        if (d.formato !== 2) { sessioni.push(JSON.parse(JSON.stringify(d))); continue; } // vecchio formato, un solo documento
+        try {
+          const parti = Object.fromEntries(Object.entries(d.parti).map(([parte, n]) => {
+            let testo = "";
+            for (let k = 0; k < n; k++) {
+              const pezzo = docs.get(`${id}.${parte}.${k}`)?.t;
+              if (typeof pezzo !== "string") throw new Error(`pezzo mancante ${id}.${parte}.${k}`);
+              scritti.set(`${id}.${parte}.${k}`, pezzo);
+              testo += pezzo;
+            }
+            return [parte, JSON.parse(testo)];
+          }));
+          scritti.set(id, JSON.stringify(d));
+          sessioni.push({ ...parti.meta, messaggi: parti.strategia, op: { compiti: parti.compiti, messaggi: parti.operativo }, priv: { messaggi: parti.privata } });
+        } catch (e) { console.error("Sessione non leggibile", id, e); }
+      }
+      return sessioni;
+    },
+    async salva(s) {
+      const indice = { formato: 2, parti: {} };
+      for (const [parte, valore] of Object.entries(dividiSessione(s))) {
+        const testo = JSON.stringify(valore ?? null);
+        const n = Math.max(1, Math.ceil(testo.length / PEZZO));
+        indice.parti[parte] = n;
+        for (let k = 0; k < n; k++) {
+          const id = `${s.id}.${parte}.${k}`, pezzo = testo.slice(k * PEZZO, (k + 1) * PEZZO);
+          if (scritti.get(id) === pezzo) continue;
+          await chats.doc(id).set({ t: pezzo });
+          scritti.set(id, pezzo);
+        }
+      }
+      const vecchio = scritti.get(s.id);
+      const nuovo = JSON.stringify(indice);
+      if (vecchio !== nuovo) {
+        await chats.doc(s.id).set(indice);
+        scritti.set(s.id, nuovo);
+        // Pezzi avanzati da una versione più lunga.
+        const prima = vecchio?.startsWith('{"formato":2') ? pezziDi(s.id, JSON.parse(vecchio)) : [];
+        const ora = new Set(pezziDi(s.id, indice));
+        for (const id of prima) if (!ora.has(id)) { await chats.doc(id).delete(); scritti.delete(id); }
+      }
+    },
+    async elimina(id) {
+      const indice = scritti.get(id);
+      await chats.doc(id).delete();
+      scritti.delete(id);
+      if (indice?.startsWith('{"formato":2')) for (const p of pezziDi(id, JSON.parse(indice))) { await chats.doc(p).delete(); scritti.delete(p); }
+    },
+  };
 }
 
 // Un salvataggio alla volta per sessione, sempre con l'ultima versione.
@@ -366,7 +429,12 @@ function salva(s) {
       try { await archivio.salva(JSON.parse(JSON.stringify(copia))); }
       catch (e) {
         console.error("Salvataggio non riuscito", e);
-        if (e?.code === "quota_exceeded" && !s.avvisoSpazio) { s.avvisoSpazio = true; sistema(s, "⚠️ Lo spazio per salvare questa sessione è pieno: le prossime risposte potrebbero non essere salvate. Elimina qualche sessione vecchia."); }
+        if (!s.avvisoSalvataggio) {
+          s.avvisoSalvataggio = true;
+          sistema(s, e?.code === "quota_exceeded"
+            ? "⚠️ Lo spazio per salvare le chat è pieno: le prossime risposte potrebbero non essere salvate. Elimina qualche sessione vecchia."
+            : "⚠️ Non riesco a salvare questa sessione: se chiudi la pagina potresti perdere gli ultimi messaggi.");
+        }
       }
     } while (stato.ancora);
     stato.inCorso = false;
@@ -491,6 +559,10 @@ async function eseguiCompiti(s, idAgente, lista_, nota = "") {
   }
   for (const k of lista_) if (!k.esito) { k.esito = "impossibile"; k.consegna = "L'agente non ha consegnato questo compito."; k.serve_dal_capo = []; }
   salva(s);
+}
+
+function formattaAgentiRichiesti(agenti) {
+  return agenti.length ? `🧩 *Agenti che vorrei nel team*\n${agenti.map((a) => `• *${a.nome || "Nuovo agente"}* – ${a.ruolo}: ${a.cosa_farebbe}${a.perche_serve ? ` _(${a.perche_serve})_` : ""}`).join("\n")}` : "";
 }
 
 function formattaPunti(punti) {
@@ -645,13 +717,14 @@ const FASI = [
 
   async function rapporto(s) {
     const out = await turno(s, "ceo", "rapporto",
-      contesto(s, `Il team operativo ha finito questo giro di lavoro. Ecco tutti i compiti con le consegne:\n${json(compiti(s).map((k) => vistaCompito(k, 2500)))}\n\nScrivi un messaggio di chiusura per il team e poi un messaggio PRIVATO per il capo. Nei "punti" metti SOLO quello che serve davvero dal capo, raggruppando i doppioni: cosa deve fare lui (con dove trova il materiale pronto, es. "testo in C3"), decisioni da prendere, informazioni che mancano al team, cose impossibili per noi. Ordina per priorità.`),
+      contesto(s, `Il team operativo ha finito questo giro di lavoro. Ecco tutti i compiti con le consegne:\n${json(compiti(s).map((k) => vistaCompito(k, 2500)))}\n\nScrivi un messaggio di chiusura per il team e poi un messaggio PRIVATO per il capo. Nei "punti" metti SOLO quello che serve davvero dal capo, raggruppando i doppioni: cosa deve fare lui (con dove trova il materiale pronto, es. "testo in C3"), decisioni da prendere, informazioni che mancano al team, cose impossibili per noi. Ordina per priorità. Se al team operativo manca una figura per completare il lavoro (compiti impossibili o fatti a metà per mancanza di competenze o strumenti), proponi in "agenti_richiesti" i nuovi agenti da aggiungere, descritti in modo preciso: il capo li farà aggiungere al team.`),
       { c: "operativo", pubblica: false });
     s.punti = lista(out.punti).filter((p) => p?.testo);
+    s.agentiRichiesti = lista(out.agenti_richiesti).filter((a) => a?.ruolo);
     if (out.messaggio_team) aggiungi(s, "ceo", out.messaggio_team, {}, "operativo");
     sistema(s, "🔒 Elena ti ha scritto in privato.", "operativo");
     if (!s.priv.messaggi.length) sistema(s, "🔒 Chat privata tra te ed Elena. Qui ti riferisce cosa serve da te: rispondi qui e lei girerà al team quello che gli serve.", "privata");
-    aggiungi(s, "ceo", out.messaggio_chat ?? "Ecco cosa serve da te.", { dettagli: s.punti.length ? formattaPunti(s.punti) : undefined }, "privata");
+    aggiungi(s, "ceo", out.messaggio_chat ?? "Ecco cosa serve da te.", { dettagli: [formattaPunti(s.punti), formattaAgentiRichiesti(s.agentiRichiesti)].filter(Boolean).join("\n\n") || undefined }, "privata");
   },
 ];
 const FASE_OPERATIVA = FASI.findIndex((f) => f.name === "ordini");
